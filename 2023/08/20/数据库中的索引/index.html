@@ -19,28 +19,28 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="Spring Validation（Spring 验证）是在 Spring 框架中提供的一种数据校验机制，用于验证和处理用户输入数据的有效性。它基于 JSR-303 规范（Bean Validation）实现，通过注解和验证器的方式，可以方便地进行数据验证和错误处理。">
+    <meta name="description" content="在数据库中，索引是一种数据结构，用于提高数据检索的速度和效率。索引可以看作是数据库表中的一种特殊数据结构，它以某种方式存储了字段值和对应的行位置之间的映射关系。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring Validation">
-<meta property="og:url" content="https://sanpoi6.github.io/2023/08/19/Spring-Validation/index.html">
+<meta property="og:title" content="数据库中的索引">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/08/20/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/index.html">
 <meta property="og:site_name" content="Sanpoi">
-<meta property="og:description" content="Spring Validation（Spring 验证）是在 Spring 框架中提供的一种数据校验机制，用于验证和处理用户输入数据的有效性。它基于 JSR-303 规范（Bean Validation）实现，通过注解和验证器的方式，可以方便地进行数据验证和错误处理。">
+<meta property="og:description" content="在数据库中，索引是一种数据结构，用于提高数据检索的速度和效率。索引可以看作是数据库表中的一种特殊数据结构，它以某种方式存储了字段值和对应的行位置之间的映射关系。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-19T12:30:17.000Z">
-<meta property="article:modified_time" content="2023-08-19T12:56:45.303Z">
+<meta property="article:published_time" content="2023-08-20T06:55:18.000Z">
+<meta property="article:modified_time" content="2023-08-20T07:05:51.386Z">
 <meta property="article:author" content="Sanpoi">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://sanpoi6.github.io/2023/08/19/Spring-Validation/">
+<link rel="canonical" href="https://sanpoi6.github.io/2023/08/20/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/19/Spring-Validation/","path":"2023/08/19/Spring-Validation/","title":"Spring Validation"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/20/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/","path":"2023/08/20/数据库中的索引/","title":"数据库中的索引"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Spring Validation | Sanpoi</title>
+<title>数据库中的索引 | Sanpoi</title>
   
 
 
@@ -140,7 +140,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="nav-number">1.</span> <span class="nav-text">1.添加依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">2.常用注解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E5%9C%A8%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E4%B8%8A-%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0-%E6%B7%BB%E5%8A%A0%E6%B3%A8%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">3.在模型参数对象字段上(请求参数)添加注解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E5%9C%A8%E6%8E%A7%E5%88%B6%E5%99%A8%E7%B1%BB%E4%B8%8A%E6%88%96%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95%E7%9A%84%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E4%B8%8A%E6%B7%BB%E5%8A%A0%E6%B3%A8%E8%A7%A3"><span class="nav-number">4.</span> <span class="nav-text">4.在控制器类上或请求方法的请求参数上添加注解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">5.区别</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95"><span class="nav-number">1.</span> <span class="nav-text">数据库中的索引</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -188,7 +188,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/19/Spring-Validation/">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/20/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/header.jpg">
@@ -201,12 +201,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Spring Validation | Sanpoi">
-      <meta itemprop="description" content="Spring Validation（Spring 验证）是在 Spring 框架中提供的一种数据校验机制，用于验证和处理用户输入数据的有效性。它基于 JSR-303 规范（Bean Validation）实现，通过注解和验证器的方式，可以方便地进行数据验证和错误处理。">
+      <meta itemprop="name" content="数据库中的索引 | Sanpoi">
+      <meta itemprop="description" content="在数据库中，索引是一种数据结构，用于提高数据检索的速度和效率。索引可以看作是数据库表中的一种特殊数据结构，它以某种方式存储了字段值和对应的行位置之间的映射关系。">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Spring Validation
+          数据库中的索引
         </h1>
 
         <div class="post-meta-container">
@@ -218,7 +218,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2023-08-19 20:30:17 / 修改时间：20:56:45" itemprop="dateCreated datePublished" datetime="2023-08-19T20:30:17+08:00">2023-08-19</time>
+      <time title="创建时间：2023-08-20 14:55:18 / 修改时间：15:05:51" itemprop="dateCreated datePublished" datetime="2023-08-20T14:55:18+08:00">2023-08-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -226,7 +226,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">Spring相关</span></a>
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">数据库相关</span></a>
         </span>
     </span>
 
@@ -244,7 +244,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>1.6k</span>
+      <span>1.3k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -255,53 +255,51 @@
     </span>
 </div>
 
-            <div class="post-description">Spring Validation（Spring 验证）是在 Spring 框架中提供的一种数据校验机制，用于验证和处理用户输入数据的有效性。它基于 JSR-303 规范（Bean Validation）实现，通过注解和验证器的方式，可以方便地进行数据验证和错误处理。</div>
+            <div class="post-description">在数据库中，索引是一种数据结构，用于提高数据检索的速度和效率。索引可以看作是数据库表中的一种特殊数据结构，它以某种方式存储了字段值和对应的行位置之间的映射关系。</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="1-添加依赖"><a href="#1-添加依赖" class="headerlink" title="1.添加依赖"></a>1.添加依赖</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- Spring Boot支持Validation的依赖项 --&gt;</span><br><span class="line">           &lt;dependency&gt;</span><br><span class="line">               &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">               &lt;artifactId&gt;spring-boot-starter-validation&lt;/artifactId&gt;</span><br><span class="line">               &lt;spring-boot.version&gt;<span class="number">2.5</span><span class="number">.0</span>&lt;/spring-boot.version&gt;</span><br><span class="line">           &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+    <div class="post-body" itemprop="articleBody"><h1 id="数据库中的索引"><a href="#数据库中的索引" class="headerlink" title="数据库中的索引"></a>数据库中的索引</h1><p>在关系型数据库中，索引（index）是一种单独的、物理层面的对数据库中的一列或多列的值进行排序检索的一种数据结构。</p>
+<p>在关系型数据库中，查询数据的效率其实非常低下，在没有做任何优化处理的情况下，查询时，会将表中所有数据全部检查一遍，看每一条数据是否匹配查询条件，所以，数据量越大，查询耗时就越久！并且，数据在磁盘上并不是连接排列的，而是分散在硬盘的不同区域的，所以，进一步导致查询效率低下！</p>
+<p>使用索引可以非常明显的提升查询效率！</p>
+<p>如果需要手动创建索引，需要自行执行创建索引的SQL语句，其命令基本格式大致是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE INDEX index_name ON table_name (field_name);</span><br></pre></td></tr></table></figure>
 
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE INDEX idx_name ON mall_category (name);</span><br></pre></td></tr></table></figure>
 
+<p>提示：如果表中已经存在数据，数据量越大，创建索引的耗时就越久！</p>
+<p>如果需要删除已经存在的索引，其命令基本格式大致是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP INDEX index_name ON table_name;</span><br></pre></td></tr></table></figure>
 
-<h1 id="2-常用注解"><a href="#2-常用注解" class="headerlink" title="2.常用注解"></a>2.常用注解</h1><p>通常用在</p>
-<p>@NotNull：不允许为null值</p>
-<p>可用于任何类型的参数</p>
-<p>@NotEmpty：不允许为空字符串，即长度为0的字符串</p>
-<p>仅用于检查字符串类型的参数</p>
-<p>@NotBlank：不允许为空白的字符串，即仅由空格或TAB制表位或换行组成的值</p>
-<p>仅用于检查字符串类型的参数</p>
-<p>@Length：限制字符串的长度</p>
-<p>@Pattern：通过正则表达式检查字符串的格式，此注解的regexp属性就是定义正则表达式的属性</p>
-<p>仅用于检查字符串类型的参数</p>
-<p>@Min：限制整型数值的最小值</p>
-<p>仅用于检查整型数值参数</p>
-<p>@Max：限制整型数值的最大值</p>
-<p>仅用于检查整型数值参数</p>
-<p>@Range：限制整型数值的取值区间，默认最小值为0，最大值为long的上限值</p>
-<p>仅用于检查整型数值参数</p>
-<h1 id="3-在模型参数对象字段上-请求参数-添加注解"><a href="#3-在模型参数对象字段上-请求参数-添加注解" class="headerlink" title="3.在模型参数对象字段上(请求参数)添加注解"></a>3.在模型参数对象字段上(请求参数)添加注解</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotBlank;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.Positive;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;用户名不能为空&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;密码不能为空&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Positive(message = &quot;年龄必须为正数&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 省略 getter 和 setter</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="4-在控制器类上或请求方法的请求参数上添加注解"><a href="#4-在控制器类上或请求方法的请求参数上添加注解" class="headerlink" title="4.在控制器类上或请求方法的请求参数上添加注解"></a>4.在控制器类上或请求方法的请求参数上添加注解</h1><p>可以用在类名上添加<code>@Validated</code>对所有方法验证,也可以添加在具体的参数前面对具体方法验证</p>
-<h1 id="5-区别"><a href="#5-区别" class="headerlink" title="5.区别"></a>5.区别</h1><p><code>@Validated</code> 和 <code>@Valid</code> 是 Spring 中用于参数验证的注解，它们之间有以下区别：</p>
-<ol>
-<li><p><code>@Validated</code> 是 Spring 提供的注解，而 <code>@Valid</code> 是 Java 标准的 Bean Validation（JSR-303）提供的注解。</p>
-</li>
-<li><p><code>@Validated</code> 注解提供了一些额外功能，例如分组验证、级联验证等，这些功能在 Bean Validation 中并不存在。</p>
-</li>
-<li><p><code>@Validated</code> 注解是 Spring 特有的，在 Spring 的环境中起作用。它基于 AOP（面向切面编程）实现，使用了 Spring 的校验器（Validator）进行验证。</p>
-</li>
-<li><p><code>@Valid</code> 注解是 Bean Validation 的标准注解，它可以在任何符合 Bean Validation 规范的环境下使用，不依赖于 Spring。</p>
-</li>
-</ol>
-<p>要选择使用哪个注解取决于你的具体需求和使用的框架。</p>
+<p>在创建索引时，MySQL会将对应的字段的数据进行排序，并在索引中记录下每条数据的位置信息，所以，索引相当于“书的目录”，后续，当需要根据此字段查询数据时，会先翻“书的目录”，找出数据对应的“页码”，并直接翻到对应的“那一页”，就可以把数据找出来了！所以，使用索引后，查询效率会非常高！</p>
+<p>索引的本质是一种B+Tree结构（是一种树型结构）的数据，在MySQL中，InnoDB存储引擎中页的大小是16KB，如果使用BIGINT类型的主键，每个主键需要占用8Byte，在B+Tree中的指针是4~8Byte，所以，每个指针与主键形成1个B+Tree中的节点，每个节点最多占用16Byte，每页最少可以存储1024个节点，深度为3的B+Tree最少可以存储1024 * 1024 * 1024个节点，大约是1000 * 1000 * 1000 &#x3D; 1000000000个节点（10亿），所以，每个B+Tree可以维护约10亿个节点，即10亿个“内容与页码”的对应关系，如果表中的数据量不超过约10亿条，都只需要执行3次IO操作，就可以找出数据的位置。</p>
+<p>在数据库中，即使你没有显式的创建索引，某个字段的查询效率可能也非常高，是因为索引有多种：</p>
 <ul>
-<li>如果你使用的是 Spring 框架，并且需要使用一些特定于 Spring 的功能，如分组验证、级联验证等，那么你可以选择使用 <code>@Validated</code> 注解。</li>
-<li>如果你只需要进行基本的参数验证，并且希望能够在任何符合 Bean Validation 规范的环境中使用，那么你可以选择使用 <code>@Valid</code> 注解。</li>
+<li>PRIMARY KEY：主键索引</li>
+<li>UNIQUE：唯一索引</li>
+<li>INDEX：普通索引</li>
+<li>FULLTEXT：全文索引</li>
 </ul>
-<p>需要注意的是，无论选择哪个注解，都需要确保你的项目中包含了相应的验证框架和依赖。例如，使用 <code>@Valid</code> 注解需要在 classpath 中包含 Bean Validation 的相关库，如 Hibernate Validator。而使用 <code>@Validated</code> 注解则需要 Spring 的相关依赖。</p>
+<p>基于索引的数据结构的特性，在使用时，必须注意：</p>
+<ul>
+<li>索引不会包含有NULL值的列</li>
+<li>数据量非常少的表没有必要创建索引，索引也需要维护，并占用一定的存储空间</li>
+<li>数据经常变化的字段不要创建索引，因为，数据的变化可能需要同步更新索引，导致写数据的效率降低</li>
+<li>查询时需要计算字段的值时，索引是无效的（不会发挥作用），例如：<code>where age / 10 &gt; 8</code>时，<code>age</code>列的索引就是无效的</li>
+<li>左侧的模糊查询无法使用索引，因为索引是基于这一列的数据进行排序得到的，如果执行左侧模糊查询，则排序是无意义的，所有数据都需要被检查是否匹配<ul>
+<li>在开发实践中，几乎不使用模糊查询</li>
+</ul>
+</li>
+</ul>
+<p>除了以上限制以外，不同的企业可能有更高的要求：</p>
+<ul>
+<li>类别为<code>text</code>的字段不允许使用索引</li>
+<li>类别为<code>varchar</code>且字段值可能很长的字段不允许使用索引</li>
+</ul>
 
     </div>
 
@@ -315,13 +313,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2023/08/19/Knife4j/" rel="prev" title="knife4j">
-                  <i class="fa fa-angle-left"></i> knife4j
+                <a href="/2023/08/20/Redis/" rel="prev" title="Redis">
+                  <i class="fa fa-angle-left"></i> Redis
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2023/08/20/Redis/" rel="next" title="Redis">
-                  Redis <i class="fa fa-angle-right"></i>
+                <a href="/2023/08/20/Elasticsearch/" rel="next" title="Elasticsearch">
+                  Elasticsearch <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
