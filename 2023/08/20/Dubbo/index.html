@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Dubbo 是一个高性能的、基于 Java 的开源 RPC（Remote Procedure Call，远程过程调用）框架，由阿里巴巴集团开发和维护。它提供了一种可靠的服务调用和服务治理方案，用于构建分布式的服务化应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dubbo">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/08/20/Dubbo/index.html">
+<meta property="og:site_name" content="Sanpoi">
+<meta property="og:description" content="Dubbo 是一个高性能的、基于 Java 的开源 RPC（Remote Procedure Call，远程过程调用）框架，由阿里巴巴集团开发和维护。它提供了一种可靠的服务调用和服务治理方案，用于构建分布式的服务化应用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817170450535.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818095855160.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818101909288.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818102026204.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818103137244.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818104416943.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818104934947.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818105933517.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818113755703.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230821092949921.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230821095349173.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230821101244982.png">
+<meta property="article:published_time" content="2023-08-20T07:42:26.000Z">
+<meta property="article:modified_time" content="2023-08-25T06:51:40.983Z">
+<meta property="article:author" content="Sanpoi">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817170450535.png">
+
+
+<link rel="canonical" href="https://sanpoi6.github.io/2023/08/20/Dubbo/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/20/Dubbo/","path":"2023/08/20/Dubbo/","title":"Dubbo"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Dubbo | Sanpoi</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sanpoi</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">东隅已逝，桑榆非晚</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Dubbo%E8%BF%9C%E7%A8%8B%E8%B0%83%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">Dubbo远程调用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5%E4%BB%8B%E7%BB%8Ddubbo-RPC"><span class="nav-number">1.1.</span> <span class="nav-text">概念介绍dubbo&amp;RPC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo%E7%BB%93%E6%9E%84%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.</span> <span class="nav-text">dubbo结构流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E8%A7%92%E8%89%B2%E6%95%B4%E5%90%88Dubbo"><span class="nav-number">1.3.</span> <span class="nav-text">分角色整合Dubbo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%B3%A8%E5%86%8C%E4%BF%A1%E6%81%AF"><span class="nav-number">1.4.</span> <span class="nav-text">启动注册信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E9%80%BB%E8%BE%91"><span class="nav-number">1.5.</span> <span class="nav-text">底层逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo%E6%95%B4%E5%90%88consumer"><span class="nav-number">1.6.</span> <span class="nav-text">dubbo整合consumer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#order%E5%90%AF%E5%8A%A8%E6%B3%A8%E5%86%8C%E4%BF%A1%E6%81%AF"><span class="nav-number">1.7.</span> <span class="nav-text">order启动注册信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cart%E6%95%B4%E5%90%88"><span class="nav-number">1.8.</span> <span class="nav-text">cart整合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%AA%8C%E8%AF%81%E8%B0%83%E7%94%A8"><span class="nav-number">1.9.</span> <span class="nav-text">启动验证调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%9C%E7%A8%8B%E8%B0%83%E7%94%A8%E4%B8%8D%E4%BD%BF%E7%94%A8HTTP"><span class="nav-number">1.10.</span> <span class="nav-text">为什么远程调用不使用HTTP</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.</span> <span class="nav-text">Dubbo负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">2.1.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5"><span class="nav-number">2.2.</span> <span class="nav-text">dubbo负载均衡策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">dubbo负载均衡配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.1.</span> <span class="nav-text">全局配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.2.</span> <span class="nav-text">局部配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%85%8D%E7%BD%AE%E4%BC%98%E5%85%88%E7%BA%A7"><span class="nav-number">2.3.3.</span> <span class="nav-text">负载均衡配置优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E6%B5%8B%E8%AF%95"><span class="nav-number">2.3.4.</span> <span class="nav-text">简单测试</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sanpoi"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Sanpoi</p>
+  <div class="site-description" itemprop="description">人无远虑，必有近忧</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/20/Dubbo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Sanpoi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanpoi">
+      <meta itemprop="description" content="人无远虑，必有近忧">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Dubbo | Sanpoi">
+      <meta itemprop="description" content="Dubbo 是一个高性能的、基于 Java 的开源 RPC（Remote Procedure Call，远程过程调用）框架，由阿里巴巴集团开发和维护。它提供了一种可靠的服务调用和服务治理方案，用于构建分布式的服务化应用。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Dubbo
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-08-20 15:42:26" itemprop="dateCreated datePublished" datetime="2023-08-20T15:42:26+08:00">2023-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-25 14:51:40" itemprop="dateModified" datetime="2023-08-25T14:51:40+08:00">2023-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">微服务相关组件</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">Dubbo 是一个高性能的、基于 Java 的开源 RPC（Remote Procedure Call，远程过程调用）框架，由阿里巴巴集团开发和维护。它提供了一种可靠的服务调用和服务治理方案，用于构建分布式的服务化应用。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Dubbo远程调用"><a href="#Dubbo远程调用" class="headerlink" title="Dubbo远程调用"></a>Dubbo远程调用</h1><h2 id="概念介绍dubbo-RPC"><a href="#概念介绍dubbo-RPC" class="headerlink" title="概念介绍dubbo&amp;RPC"></a>概念介绍dubbo&amp;RPC</h2><p>Dubbo 是一种基于 RPC（Remote Procedure Call，远程过程调用）的框架，用于构建分布式的服务化应用。RPC 是一种通信协议，允许一个程序在不同的计算机上通过网络调用另一个程序的方法或函数。</p>
+<p>Dubbo 的概念：</p>
+<p>Dubbo 是由阿里巴巴集团开发和维护的高性能的、基于 Java 的开源 RPC 框架。它提供了服务调用和服务治理的解决方案，用于构建分布式系统和微服务架构。Dubbo 具有以下特点：</p>
+<p>RPC 的概念：</p>
+<p>RPC 是一种远程过程调用的协议，用于实现不同计算机上程序之间的通信和方法调用。它的基本思想是将远程方法的调用封装成本地方法调用，使得远程方法对开发人员来说具有透明性。</p>
+<h2 id="dubbo结构流程"><a href="#dubbo结构流程" class="headerlink" title="dubbo结构流程"></a>dubbo结构流程</h2><ul>
+<li><p>服务协调者: 注册中心(管理的数据是dubbo框架流程中的 provider和consumer)</p>
+</li>
+<li><p>服务提供者provider: (cart&#x2F;stock) 整合dubbo组件,连接nacos协调者进行provider功能注册.</p>
+</li>
+<li><p>服务消费者consumer: (order) 整合dubbo组件,连接nacos协调者进行provider抓取</p>
+</li>
+<li></li>
+</ul>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817170450535.png" alt="image-20230817170450535" style="zoom:50%;" />
+
+<h2 id="分角色整合Dubbo"><a href="#分角色整合Dubbo" class="headerlink" title="分角色整合Dubbo"></a>分角色整合Dubbo</h2><p>stock整合dubbo</p>
+<p>为什么要整合dubbo: 作为远程调用流程的provider 整合dubbo才能实现注册.才能通过dubbo框架被rpc远程调用.</p>
+<ol>
+<li>依赖(完成)</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--底层dubbo版本2.7.8--&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>yaml配置(完成)</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dubbo相关属性</span></span><br><span class="line"><span class="attr">dubbo:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># 为dubbo配置的应用名称,一般情况下 和spring 一样</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">dubbo-luban-demo-stock</span></span><br><span class="line">    <span class="comment"># qos端口关闭 qos是dubbo提供的一套api接口,允许自定义项目监听连接dubbo</span></span><br><span class="line">    <span class="attr">qos-enable:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment"># 作为dubbo结构的一员,总要连接注册中心</span></span><br><span class="line">  <span class="attr">registry:</span></span><br><span class="line">    <span class="comment"># dubbo底层读取属性,会解析协议名称,根据协议名称</span></span><br><span class="line">    <span class="comment"># 创建了解不同协调器的代码实现 nacos zookeper</span></span><br><span class="line">    <span class="attr">address:</span> <span class="string">nacos://localhost:8848</span></span><br><span class="line">    <span class="comment"># spring cloud starter中包含一些我们用不到的属性配置,需要关闭</span></span><br><span class="line">    <span class="comment"># 如果不关闭,不管理,会导致nacos配置文件越来越多</span></span><br><span class="line">    <span class="attr">use-as-config-center:</span> <span class="literal">false</span></span><br><span class="line">    <span class="attr">use-as-metadata-center:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">protocol:</span></span><br><span class="line">    <span class="comment"># rpc底层通信协议 默认使用dubbo提供的性能最高的,匹配兼容最好的dubbo协议</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">dubbo</span></span><br><span class="line">    <span class="comment"># 定义这个协议的端口名称 -1 会检查当前系统已经占用了从20880开始的哪个端口</span></span><br><span class="line">    <span class="comment"># 做递增处理</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">-1</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="comment"># 在没有明确调用关系 消费关系时,暂时让dubbo spring客户端订阅空</span></span><br><span class="line">    <span class="attr">subscribed-services:</span> </span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>注解</li>
+</ol>
+<p>做注解的使用之前,要明确<strong>provider是谁</strong>,提供了哪些功能</p>
+<p>明确,<strong>consumer是谁</strong>,调用了哪些功能</p>
+<p>stock项目为例:</p>
+<ul>
+<li>provider: 被order调用 减库存</li>
+<li>com.tarena.luban.demo.all.serivce.IStockService: reduceCommodityCount</li>
+<li>实现类: StockServiceImpl</li>
+</ul>
+<p>启动类中 定义一个注解的使用</p>
+<p>@EnableDubbo</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tarena.luban.demo.all.adapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.dubbo.config.spring.context.annotation.EnableDubbo;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.ComponentScan;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@ComponentScan(basePackages = &#123;&quot;com.tarena.luban.demo.all&quot;,&quot;com.tarena.luban.commons.exception&quot;&#125;)</span></span><br><span class="line"><span class="comment">//但凡叫做Enable的注解,都是在额外的导入配置逻辑</span></span><br><span class="line"><span class="comment">//扫描 provider注解和consumer的注解</span></span><br><span class="line"><span class="comment">//根据配置dubbo远程注册中心,实现信息注册</span></span><br><span class="line"><span class="meta">@EnableDubbo</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AllApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(AllApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在提供者的实现逻辑代码中(StockServiceImpl) 添加provider注解</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818095855160.png" alt="image-20230818095855160"></p>
+<h2 id="启动注册信息"><a href="#启动注册信息" class="headerlink" title="启动注册信息"></a>启动注册信息</h2><p>stock启动,会发现nacos出现多条注册信息,其中luban-demo-stock是nacos客户端注册信息,不参与dubbo远程调用的.</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818101909288.png" alt="image-20230818101909288"></p>
+<p>provider: 当前注册的角色是提供者</p>
+<p>com.tarena.luban.demo.all.service.IStockService: 允许远程建立连接调用的接口</p>
+<p>选择这个dubbo注册 信息详情</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818102026204.png" alt="image-20230818102026204"></p>
+<p>详情里记录了这个provider实例的所有允许远程调用需要抓取的必要条件.</p>
+<p>核心 ip:port 接口和方法.</p>
+<h2 id="底层逻辑"><a href="#底层逻辑" class="headerlink" title="底层逻辑"></a>底层逻辑</h2><p>在provider的进程中,会根据dubbo信息 开启一个dubboSocket服务. 占用dubbo协议端口 ,等待调用者建立连接访问实现方法 addUser() reduceCommodityCount();</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818103137244.png" alt="image-20230818103137244"></p>
+<h2 id="dubbo整合consumer"><a href="#dubbo整合consumer" class="headerlink" title="dubbo整合consumer"></a>dubbo整合consumer</h2><p>consumer端的配置和使用和 provider几乎一模一样的,维度注解有区别</p>
+<p>provider端使用的注解叫做@DubboService</p>
+<p>consumer端使用的注解叫做@DubboReference</p>
+<p> order实现整合</p>
+<ol>
+<li>依赖</li>
+<li>yaml(微调)</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cloud:</span></span><br><span class="line">  <span class="comment"># 订阅的dubbo 服务(dubbo appplicaiton name)</span></span><br><span class="line">  <span class="attr">subscribed-services:</span> <span class="string">luban-demo-stock</span></span><br><span class="line"><span class="attr">consumer:</span></span><br><span class="line">  <span class="comment"># dubbo有调用关系的结构中,默认情况下 consumer会检查provider是否启动</span></span><br><span class="line">  <span class="comment"># 将这个检查关闭. 但是如果可以做到,还是最好先启动provider</span></span><br><span class="line">  <span class="attr">check:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>注解的使用</li>
+</ol>
+<p>当前项目 的角色 order-consumer 消费者调用者</p>
+<p>当前项目调用的功能 @Autowired(required&#x3D;false) IStockService</p>
+<ul>
+<li>启动类</li>
+</ul>
+<p>@EnableDubbo</p>
+<ul>
+<li>调用逻辑属性对象上IStockService添加注解</li>
+</ul>
+<p>@DubboReference</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818104416943.png" alt="image-20230818104416943"></p>
+<h2 id="order启动注册信息"><a href="#order启动注册信息" class="headerlink" title="order启动注册信息"></a>order启动注册信息</h2><p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818104934947.png" alt="image-20230818104934947"></p>
+<p>明确的表示了 stock作为provider向外提供IStockService实现的</p>
+<p>order作为consumer需要调用IStockService</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818105933517.png" alt="image-20230818105933517"></p>
+<p>provider整合dubbo:</p>
+<ol>
+<li>注册在nacos(向外声明可以提供功能)</li>
+<li>建立了一个dubboSocket 开启外界调用的入口</li>
+<li>实现类就等着被dubboSocket调用</li>
+</ol>
+<p>consumer整合dubbo:</p>
+<ol>
+<li>抓取的nacos信息</li>
+<li>本地根据nacos中的需要的信息IStockService 建立代理</li>
+<li>代码中调用的接口实际调用代理</li>
+<li>代理底层根据抓取的信息建立和provider的连接</li>
+</ol>
+<h2 id="cart整合"><a href="#cart整合" class="headerlink" title="cart整合"></a>cart整合</h2><p>思考:</p>
+<ol>
+<li>什么角色: provider</li>
+<li>暴露接口: ICartService</li>
+</ol>
+<p>整合cart:</p>
+<ol>
+<li><p>依赖</p>
+</li>
+<li><p>yaml(微调)</p>
+</li>
+<li><p>注解</p>
+</li>
+</ol>
+<ul>
+<li>@EnableDubbo 启动类</li>
+<li>@DubbuService provider 实现类注解 暴露</li>
+</ul>
+<p>修改order:</p>
+<ol>
+<li>yaml 微调(订阅2个服务)</li>
+<li>serviceImpl @DubboRefrerence的使用</li>
+</ol>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230818113755703.png" alt="image-20230818113755703"></p>
+<h2 id="启动验证调用"><a href="#启动验证调用" class="headerlink" title="启动验证调用"></a>启动验证调用</h2><ul>
+<li>访问购物车接口 新增购物车()</li>
+<li>访问订单接口 新增订单</li>
+</ul>
+<h2 id="为什么远程调用不使用HTTP"><a href="#为什么远程调用不使用HTTP" class="headerlink" title="为什么远程调用不使用HTTP"></a>为什么远程调用不使用HTTP</h2><ul>
+<li><p>能不能使用HTTP 做order调用cart stock的实现</p>
+<ul>
+<li>可以的</li>
+</ul>
+</li>
+<li><p>遵循一个微服务架构中远程调用的方案的原则:</p>
+<ul>
+<li><p>对内RPC(性能)</p>
+</li>
+<li><p>对外HTTP(规范)</p>
+<ul>
+<li>nacos客户端还用不用(对外http的时候要用到nacos的注册信息)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="Dubbo负载均衡"><a href="#Dubbo负载均衡" class="headerlink" title="Dubbo负载均衡"></a>Dubbo负载均衡</h1><h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>在微服务,分布式集群中,远程调用采用dubbo框架,调用的过程要实现负载均衡,因为每一个服务的实例都是集群结构.</p>
+<p>负载: 访问并发,流量,请求 都可以称为负载(存储).</p>
+<p>均衡: 集群分布式环境下,将负载压力 做逻辑均衡的分配.</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230821092949921.png" alt="image-20230821092949921"></p>
+<h2 id="dubbo负载均衡策略"><a href="#dubbo负载均衡策略" class="headerlink" title="dubbo负载均衡策略"></a>dubbo负载均衡策略</h2><ul>
+<li>random: 随机(默认)</li>
+<li>roundRobin: 轮询</li>
+<li>leastactive: 最小活跃分配负载均衡,越闲,分配的越多</li>
+</ul>
+<h2 id="dubbo负载均衡配置"><a href="#dubbo负载均衡配置" class="headerlink" title="dubbo负载均衡配置"></a>dubbo负载均衡配置</h2><h3 id="全局配置"><a href="#全局配置" class="headerlink" title="全局配置"></a>全局配置</h3><p>指的是在一个项目中的yaml文件中配置负载均衡,分为provider和consumer的角色</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dubbo:</span></span><br><span class="line">	<span class="attr">provider:</span></span><br><span class="line">		<span class="attr">loadbalance:</span> <span class="string">random</span></span><br><span class="line">	<span class="attr">consumer:</span></span><br><span class="line">		<span class="attr">loadbalance:</span> <span class="string">random</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="局部配置"><a href="#局部配置" class="headerlink" title="局部配置"></a>局部配置</h3><p>指的是在类的注解中配置负载均衡,分为provider和consumer的角色</p>
+<p>provider注解配置负载均衡</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DubboService(loadbalance = &quot;roundrobin&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<p>consumer注解配置负载均衡</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@DubboReference(loadbalance = &quot;roundrobin&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="负载均衡配置优先级"><a href="#负载均衡配置优先级" class="headerlink" title="负载均衡配置优先级"></a>负载均衡配置优先级</h3><p>几乎碰到所有的冲突配置,逻辑关系到优先级的时候,都以<strong>以更精准为更优先</strong>.</p>
+<p>局部配置&gt;全局配置</p>
+<p>provider配置&gt;consumer配置</p>
+<p>局部provider&gt;局部consumer&gt;全局provider&gt;全局consumer</p>
+<h3 id="简单测试"><a href="#简单测试" class="headerlink" title="简单测试"></a>简单测试</h3><p>观察dubbo能够实现的负载均衡</p>
+<p>目标: 搭建启动一个stock集群,每个实现代码标注一下调用端口</p>
+<p>order新增案例,调用stock做负载均衡(20次访问,基本每个stock都有调用痕迹)</p>
+<ul>
+<li>启动多个stock实例</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230821095349173.png" alt="image-20230821095349173"></p>
+<p>启动配置项,可以启动test配置项,main方法配置项,spring应用,springboot web应用…</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230821101244982.png" alt="image-20230821101244982"></p>
+<p><strong>注意</strong>: 如果是2022版本的idea 在启动配置项的右上侧有一个<strong>modify options</strong>选项.</p>
+<p>勾选override parameters就能看到.</p>
+<p>dubbo框架 springmvc myabtis nacos组件 所有的应用,都使用到了一种底层逻辑: springboot自动配置.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/20/Nacos/" rel="prev" title="Nacos">
+                  <i class="fa fa-angle-left"></i> Nacos
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/25/Git/" rel="next" title="Git">
+                  Git <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sanpoi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:51</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

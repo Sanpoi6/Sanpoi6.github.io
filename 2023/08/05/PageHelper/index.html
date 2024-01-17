@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="MyBatis PageHelper 是一个用于实现分页功能的开源工具库，它是基于 MyBatis 框架的插件。PageHelper 提供了一种简单易用的方式来处理数据库查询结果的分页需求。使用 MyBatis PageHelper 可以很方便地实现分页查询。它通过拦截器机制，在执行 SQL 语句前自动进行拦截和改写，实现了自动分页的功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PageHelper">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/08/05/PageHelper/index.html">
+<meta property="og:site_name" content="Sanpoi">
+<meta property="og:description" content="MyBatis PageHelper 是一个用于实现分页功能的开源工具库，它是基于 MyBatis 框架的插件。PageHelper 提供了一种简单易用的方式来处理数据库查询结果的分页需求。使用 MyBatis PageHelper 可以很方便地实现分页查询。它通过拦截器机制，在执行 SQL 语句前自动进行拦截和改写，实现了自动分页的功能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/PageHelp.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/pagehelp2.png">
+<meta property="article:published_time" content="2023-08-05T07:47:36.000Z">
+<meta property="article:modified_time" content="2023-08-25T06:32:16.577Z">
+<meta property="article:author" content="Sanpoi">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/PageHelp.png">
+
+
+<link rel="canonical" href="https://sanpoi6.github.io/2023/08/05/PageHelper/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/05/PageHelper/","path":"2023/08/05/PageHelper/","title":"PageHelper"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PageHelper | Sanpoi</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sanpoi</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">东隅已逝，桑榆非晚</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EPageHelper%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">关于PageHelper框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">循环依赖问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%86%E9%A1%B5%E7%BB%93%E6%9E%9C%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">自定义分页结果类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AE%E7%88%B6%E7%BA%A7%E6%9F%A5%E8%AF%A2%E5%AD%90%E7%BA%A7%E7%B1%BB%E5%88%AB%E5%88%97%E8%A1%A8%E2%80%93Repository%E5%B1%82"><span class="nav-number">5.</span> <span class="nav-text">根据父级查询子级类别列表–Repository层</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sanpoi"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Sanpoi</p>
+  <div class="site-description" itemprop="description">人无远虑，必有近忧</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/05/PageHelper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Sanpoi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanpoi">
+      <meta itemprop="description" content="人无远虑，必有近忧">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PageHelper | Sanpoi">
+      <meta itemprop="description" content="MyBatis PageHelper 是一个用于实现分页功能的开源工具库，它是基于 MyBatis 框架的插件。PageHelper 提供了一种简单易用的方式来处理数据库查询结果的分页需求。使用 MyBatis PageHelper 可以很方便地实现分页查询。它通过拦截器机制，在执行 SQL 语句前自动进行拦截和改写，实现了自动分页的功能。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PageHelper
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-08-05 15:47:36" itemprop="dateCreated datePublished" datetime="2023-08-05T15:47:36+08:00">2023-08-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-25 14:32:16" itemprop="dateModified" datetime="2023-08-25T14:32:16+08:00">2023-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E5%92%8C%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">常用工具和框架</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">MyBatis PageHelper 是一个用于实现分页功能的开源工具库，它是基于 MyBatis 框架的插件。PageHelper 提供了一种简单易用的方式来处理数据库查询结果的分页需求。使用 MyBatis PageHelper 可以很方便地实现分页查询。它通过拦截器机制，在执行 SQL 语句前自动进行拦截和改写，实现了自动分页的功能。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="关于PageHelper框架"><a href="#关于PageHelper框架" class="headerlink" title="关于PageHelper框架"></a>关于PageHelper框架</h1><p>PageHelper框架是专门用于MyBatis的无侵入性的分页框架（是通过MyBatis拦截器实现的）。</p>
+<p>在Spring Boot项目中，需要添加<code>pagehelper-spring-boot-starter</code>依赖项后才可以使用PageHelper框架：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 基于MyBatis或MyBatis Plus的分页查询框架 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.4.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后，如果项目中已经使用MyBatis &#x2F; MyBatis Plus实现了列表查询功能，就可以直接开始处理分页，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PageHelperTests</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    CategoryMapper mapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">listByParent</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">pageNum</span> <span class="operator">=</span> <span class="number">1</span>; <span class="comment">// 第几页</span></span><br><span class="line">        <span class="type">Integer</span> <span class="variable">pageSize</span> <span class="operator">=</span> <span class="number">6</span>; <span class="comment">// 每页几条</span></span><br><span class="line">        <span class="type">Long</span> <span class="variable">parentId</span> <span class="operator">=</span> <span class="number">0L</span>;</span><br><span class="line">        PageHelper.startPage(pageNum, pageSize); <span class="comment">// 设置分页，注意：这句话必须直接出现在查询之前，否则可能导致线程安全问题</span></span><br><span class="line">        List&lt;?&gt; list = mapper.listByParent(parentId);</span><br><span class="line">        <span class="keyword">for</span> (Object item : list) &#123;</span><br><span class="line">            System.out.println(item);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：以上调用<code>PageHelper.startPage()</code>与Mapper的查询，必须是连续的2条语句，否则，可能导致线程安全问题！</p>
+<h1 id="循环依赖问题"><a href="#循环依赖问题" class="headerlink" title="循环依赖问题"></a>循环依赖问题</h1><p>1.4.1版本已修复</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Description:</span><br><span class="line"></span><br><span class="line">The dependencies of some of the beans in the application context form a cycle:</span><br><span class="line"></span><br><span class="line">┌──-&gt;──┐</span><br><span class="line">|  com.github.pagehelper.autoconfigure.PageHelperAutoConfiguration</span><br><span class="line">└──&lt;-──┘</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/PageHelp.png"></p>
+<p>当通过PageHelper执行分页查询后，查询返回的集合将是<code>com.github.pagehelper.Page</code>类型的，是<code>ArrayList</code>的子级类型，并且，其中包含了许多分页的相关数据：</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/pagehelp2.png" style="zoom:50%;" />
+
+<p>由于使用MyBatis查询列表时，抽象方法的返回值类型都会声明为<code>List</code>类型，则获取的返回结果不利于从中获取以上分页相关数据，为了便于获取以上分页数据，还应该结合PageHelper框架中的<code>PageInfo</code>类一起使用，将查询结果作为<code>PageInfo</code>的构造方法参数传入即可，再调用<code>PageInfo</code>对象的方法获取数据，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PageInfo&lt;?&gt; pageInfo = <span class="keyword">new</span> <span class="title class_">PageInfo</span>&lt;&gt;(list);</span><br><span class="line">System.out.println(<span class="string">&quot;数据总量：&quot;</span> + pageInfo.getTotal());</span><br><span class="line">System.out.println(<span class="string">&quot;总页数：&quot;</span> + pageInfo.getPages());</span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义分页结果类型"><a href="#自定义分页结果类型" class="headerlink" title="自定义分页结果类型"></a>自定义分页结果类型</h1><p>使用PageHelper实现分页时，结果通常使用<code>PageInfo</code>类型，但是，此类型中包含的相关数据太多，可能是没有必要的，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">prePage=0, </span><br><span class="line">nextPage=2, </span><br><span class="line">isFirstPage=true, </span><br><span class="line">isLastPage=false, </span><br><span class="line">hasPreviousPage=false, </span><br><span class="line">hasNextPage=true, </span><br><span class="line">navigatePages=8, </span><br><span class="line">navigateFirstPage=1, </span><br><span class="line">navigateLastPage=4, </span><br><span class="line">navigatepageNums=[1, 2, 3, 4]</span><br></pre></td></tr></table></figure>
+
+<p>以上数据基本上都是不必要的！</p>
+<p>为了使得响应到客户端的数据是简单、有效的，可以自行定义数据类型，作为分页的数据结果，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PageData</span>&lt;T&gt; <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 每页记录数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Integer pageSize;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 记录总数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Long total;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当前页码</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Integer currentPage;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 最大页码</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Integer maxPage;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 数据列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;T&gt; list;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于将<code>PageInfo</code>转变为以上<code>PageData</code>类型的代码是相对固定的，不必要在每次分页查询时都写相同的代码进行转换，则可以：</p>
+<ul>
+<li>在<code>PageData</code>类上添加使用<code>PageInfo</code>参数的构造方法，在构造方法内部封装必要的数据即可</li>
+<li>使用新的工具类，在此工具类提供“将<code>PageInfo</code>转换为<code>PageData</code>的方法”</li>
+</ul>
+<p>以使用工具类为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PageInfoToPageDataConverter</span> &#123;</span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将PageHelper框架中的PageInfo类型对象转换成自定义的PageData类型对象</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pageInfo PageInfo对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;T&gt;      PageInfo对象中的列表数据中的元素数据的类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 自定义的PageData类型的对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; PageData&lt;T&gt; <span class="title function_">convert</span><span class="params">(PageInfo&lt;T&gt; pageInfo)</span> &#123;</span><br><span class="line">        PageData&lt;T&gt; pageData = <span class="keyword">new</span> <span class="title class_">PageData</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">return</span> pageData.setList(pageInfo.getList())</span><br><span class="line">                .setPageNum(pageInfo.getPageNum())</span><br><span class="line">                .setPageSize(pageInfo.getPageSize())</span><br><span class="line">                .setTotal(pageInfo.getTotal())</span><br><span class="line">                .setMaxPage(pageInfo.getPages());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> UserMapper userMapper;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">selectPage</span><span class="params">()</span> &#123;</span><br><span class="line">        Integer pageNum=<span class="number">2</span>;</span><br><span class="line">        Integer pageSize=<span class="number">5</span>;</span><br><span class="line">        PageHelper.startPage(pageNum,pageSize);</span><br><span class="line">        List&lt;User&gt; users = userMapper.selectPage();</span><br><span class="line">        <span class="keyword">for</span> (User user : users) &#123;</span><br><span class="line">            System.out.println(user);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;----------------------------------------------------------&quot;</span>);</span><br><span class="line">        PageInfo&lt;User&gt; pageInfo = <span class="keyword">new</span> <span class="title class_">PageInfo</span>(users);</span><br><span class="line">        System.out.println(<span class="string">&quot;pageInfo: &quot;</span> + pageInfo);</span><br><span class="line">        System.out.println(<span class="string">&quot;----------------------------------------------------------&quot;</span>);</span><br><span class="line">        PageData&lt;User&gt; pageData = PageInfoToPageDataConverter.convert(pageInfo);</span><br><span class="line">        System.out.println(pageData);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="根据父级查询子级类别列表–Repository层"><a href="#根据父级查询子级类别列表–Repository层" class="headerlink" title="根据父级查询子级类别列表–Repository层"></a>根据父级查询子级类别列表–Repository层</h1><p>在<code>ICategoryRepository</code>中添加抽象方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 根据父级类别查询其子级类别列表</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> parentId 父级类别的ID</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> pageNum  页码</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> pageSize 每页数据量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 类别列表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">PageData&lt;CategoryListItemVO&gt; <span class="title function_">listByParent</span><span class="params">(Long parentId, Integer pageNum, Integer pageSize)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>并在<code>CategoryRepositoryImpl</code>中实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> PageData&lt;CategoryListItemVO&gt; <span class="title function_">listByParent</span><span class="params">(Long parentId, Integer pageNum, Integer pageSize)</span> &#123;</span><br><span class="line">    log.debug(<span class="string">&quot;开始执行【根据父级类别查询其子级类别列表】的数据访问，父级类别：&#123;&#125;，页码：&#123;&#125;，每页数据量：&#123;&#125;&quot;</span>, parentId, pageNum, pageSize);</span><br><span class="line">    PageHelper.startPage(pageNum, pageSize);</span><br><span class="line">    List&lt;CategoryListItemVO&gt; list = categoryMapper.listByParent(parentId);</span><br><span class="line">    PageInfo&lt;CategoryListItemVO&gt; pageInfo = <span class="keyword">new</span> <span class="title class_">PageInfo</span>&lt;&gt;(list);</span><br><span class="line">    <span class="comment">// PageData&lt;CategoryListItemVO&gt; pageData = PageInfoToPageDataConverter.convert(pageInfo);</span></span><br><span class="line">    <span class="comment">// return pageData;</span></span><br><span class="line">    <span class="comment">// 【非常不推荐】return PageInfoToPageDataConverter.convert(new PageInfo&lt;&gt;(categoryMapper.listByParent(parentId)));</span></span><br><span class="line">    <span class="keyword">return</span> PageInfoToPageDataConverter.convert(pageInfo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/05/MyBatis-Plus/" rel="prev" title="MyBatis Plus">
+                  <i class="fa fa-angle-left"></i> MyBatis Plus
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/05/Spring-Security/" rel="next" title="Spring Security">
+                  Spring Security <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sanpoi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:51</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

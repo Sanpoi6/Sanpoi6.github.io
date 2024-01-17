@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Spring Cloud Gateway是一个基于Spring Framework和Spring Boot的开源API网关服务，用于构建微服务架构中的边缘服务。它提供了一种灵活而强大的方式来路由、过滤和转换请求，以满足不同微服务之间的通信需求。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud Gateway">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/08/25/Spring-Cloud-Gateway/index.html">
+<meta property="og:site_name" content="Sanpoi">
+<meta property="og:description" content="Spring Cloud Gateway是一个基于Spring Framework和Spring Boot的开源API网关服务，用于构建微服务架构中的边缘服务。它提供了一种灵活而强大的方式来路由、过滤和转换请求，以满足不同微服务之间的通信需求。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822094156489.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822095023449.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822111748182.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822112640305.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822112735273.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822114549204.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822152201187.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822154512997.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823093639951.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823114511269.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823115218588.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway.png">
+<meta property="article:published_time" content="2023-08-25T07:12:19.000Z">
+<meta property="article:modified_time" content="2023-08-25T07:22:42.378Z">
+<meta property="article:author" content="Sanpoi">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822094156489.png">
+
+
+<link rel="canonical" href="https://sanpoi6.github.io/2023/08/25/Spring-Cloud-Gateway/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/25/Spring-Cloud-Gateway/","path":"2023/08/25/Spring-Cloud-Gateway/","title":"Spring Cloud Gateway"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Spring Cloud Gateway | Sanpoi</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sanpoi</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">东隅已逝，桑榆非晚</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E7%BB%84%E4%BB%B6springcloud-gateway"><span class="nav-number">1.</span> <span class="nav-text">网关组件springcloud gateway</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E6%80%A7%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">阶段性架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E7%BB%84%E4%BB%B6spring-cloud-gateway%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text">网关组件spring cloud gateway基本介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E9%97%A8%E6%A1%88%E4%BE%8B"><span class="nav-number">1.3.</span> <span class="nav-text">入门案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E6%B1%82-%E8%BD%AC%E5%8F%91"><span class="nav-number">1.3.1.</span> <span class="nav-text">需求(转发)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.3.2.</span> <span class="nav-text">案例步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%A1%88%E4%BE%8B%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E8%AF%B7%E6%B1%82%E6%B5%81%E8%BD%AC%E8%BF%87%E7%A8%8B-%E9%87%8D%E8%A6%81-%E6%9E%81%E5%85%B6%E9%87%8D%E8%A6%81"><span class="nav-number">1.3.3.</span> <span class="nav-text">基于案例详细分析请求流转过程(重要,极其重要)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%AD%E8%A8%80%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.4.</span> <span class="nav-text">断言详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#After"><span class="nav-number">1.4.1.</span> <span class="nav-text">After</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Before"><span class="nav-number">1.4.2.</span> <span class="nav-text">Before</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Between"><span class="nav-number">1.4.3.</span> <span class="nav-text">Between</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie"><span class="nav-number">1.4.4.</span> <span class="nav-text">Cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Header"><span class="nav-number">1.4.5.</span> <span class="nav-text">Header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Query"><span class="nav-number">1.4.6.</span> <span class="nav-text">Query</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Host"><span class="nav-number">1.4.7.</span> <span class="nav-text">Host</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method"><span class="nav-number">1.4.8.</span> <span class="nav-text">Method</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Path"><span class="nav-number">1.4.9.</span> <span class="nav-text">Path</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remote"><span class="nav-number">1.4.10.</span> <span class="nav-text">Remote</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Weight"><span class="nav-number">1.4.11.</span> <span class="nav-text">Weight</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-0-x-%E6%96%B0%E7%9A%84%E6%96%AD%E8%A8%80"><span class="nav-number">1.4.12.</span> <span class="nav-text">(4.0.x) 新的断言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.4.13.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.5.</span> <span class="nav-text">路由负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E6%96%AD%E8%A8%80%E5%92%8C%E8%B7%AF%E7%94%B1%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB%E5%AE%9E%E7%8E%B0%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.5.1.</span> <span class="nav-text">利用断言和路由映射关系实现负载均衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E5%90%88nacos%E5%AE%9E%E7%8E%B0%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.5.2.</span> <span class="nav-text">整合nacos实现负载均衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="nav-number">1.5.3.</span> <span class="nav-text">负载均衡调用流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="nav-number">1.6.</span> <span class="nav-text">动态路由</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E5%85%B3CORS"><span class="nav-number">2.</span> <span class="nav-text">网关CORS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%A8%E5%9F%9F%E8%AE%BF%E9%97%AE%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.</span> <span class="nav-text">跨域访问问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E5%81%9A%E8%B7%A8%E5%9F%9F%E5%A4%84%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">网关做跨域处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">网关过滤器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">3.1.</span> <span class="nav-text">过滤器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E9%97%A8%E7%9A%84gateway%E8%BF%87%E6%BB%A4%E5%99%A8%E6%A1%88%E4%BE%8B"><span class="nav-number">3.2.</span> <span class="nav-text">入门的gateway过滤器案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%BF%87%E6%BB%A4%E5%99%A8%E7%B1%BB"><span class="nav-number">3.2.1.</span> <span class="nav-text">创建过滤器类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%85%A8%E5%B1%80%E8%BF%87%E6%BB%A4%E5%99%A8%E4%BD%8D%E7%BD%AE"><span class="nav-number">3.2.2.</span> <span class="nav-text">自定义全局过滤器位置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E5%85%B6%E5%AE%83%E4%B8%80%E4%BA%9B%E5%8A%9F%E8%83%BD"><span class="nav-number">3.3.</span> <span class="nav-text">过滤器的其它一些功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B1"><span class="nav-number">3.3.1.</span> <span class="nav-text">使用案例1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B2"><span class="nav-number">3.3.2.</span> <span class="nav-text">使用案例2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B3"><span class="nav-number">3.3.3.</span> <span class="nav-text">使用案例3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83"><span class="nav-number">3.4.</span> <span class="nav-text">思考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="nav-number">3.4.1.</span> <span class="nav-text">登录认证流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E4%BA%86%E7%BD%91%E5%85%B3%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="nav-number">3.4.2.</span> <span class="nav-text">有了网关登录认证流程</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sanpoi"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Sanpoi</p>
+  <div class="site-description" itemprop="description">人无远虑，必有近忧</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/25/Spring-Cloud-Gateway/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Sanpoi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanpoi">
+      <meta itemprop="description" content="人无远虑，必有近忧">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Spring Cloud Gateway | Sanpoi">
+      <meta itemprop="description" content="Spring Cloud Gateway是一个基于Spring Framework和Spring Boot的开源API网关服务，用于构建微服务架构中的边缘服务。它提供了一种灵活而强大的方式来路由、过滤和转换请求，以满足不同微服务之间的通信需求。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring Cloud Gateway
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-08-25 15:12:19 / 修改时间：15:22:42" itemprop="dateCreated datePublished" datetime="2023-08-25T15:12:19+08:00">2023-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">微服务相关组件</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>15k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">Spring Cloud Gateway是一个基于Spring Framework和Spring Boot的开源API网关服务，用于构建微服务架构中的边缘服务。它提供了一种灵活而强大的方式来路由、过滤和转换请求，以满足不同微服务之间的通信需求。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="网关组件springcloud-gateway"><a href="#网关组件springcloud-gateway" class="headerlink" title="网关组件springcloud gateway"></a>网关组件springcloud gateway</h1><h2 id="阶段性架构"><a href="#阶段性架构" class="headerlink" title="阶段性架构"></a>阶段性架构</h2><p>naocs+dubbo 实现的阶段性架构</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822094156489.png" alt="image-20230822094156489" style="zoom:50%;" />
+
+<p>这个当前的架构可以解决微服务分布式集群中任何内部调用的逻辑.但是无法处理外部调用.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822095023449.png" alt="image-20230822095023449" style="zoom:50%;" />
+
+<h2 id="网关组件spring-cloud-gateway基本介绍"><a href="#网关组件spring-cloud-gateway基本介绍" class="headerlink" title="网关组件spring cloud gateway基本介绍"></a>网关组件spring cloud gateway基本介绍</h2><p>网关作为微服务集群唯一的对外入口,可以实现很多功能.</p>
+<p>例如: 统一的解决跨域问题,统一的身份认证.如果网关能够结合一些其它的插件 可以实现入口流量控制(sentinel).做到监控预警(Prometheus)等</p>
+<p>网关的落地方案(Spring cloud gateway),还有其它选择</p>
+<ol>
+<li>netflix zuul: 原来比较火的一个网关组件,但是netflix奈飞停更了,zuul2流产了.</li>
+<li>Kong: 也是一种选择</li>
+<li>Nginx: 反向代理网关,并发能力,速度都可以保证.</li>
+</ol>
+<p>spring cloud gateway 完成的具体功能</p>
+<ul>
+<li><p>转发: 网关不具备处理某个请求的能力,所以一定要转发给微服务.</p>
+</li>
+<li><p>路由(网络端到端的路径<strong>选择</strong>): 根据请求地址,功能判断具体由哪个服务来完成这次处理</p>
+</li>
+<li><p>过滤: 可以在过滤逻辑中,对请求做自定义的逻辑处理(比如验证身份.记录请求次数)</p>
+</li>
+</ul>
+<p>spring cloud gateway 有什么特点?为什么选择这个组件</p>
+<ul>
+<li>技术栈完善,支持团队稳定</li>
+</ul>
+<p>spring cloud ,spring, spring boot</p>
+<ul>
+<li>性能高</li>
+</ul>
+<p>Spring cloug gateway 底层是spring webflux netty(nio通信逻辑). 性能超高的.</p>
+<p>没有阻塞处理,避免了I&#x2F;O瓶颈.</p>
+<ul>
+<li>易于扩展和定制</li>
+</ul>
+<p>spring框架 通用性的问题可以直接解决,定制的问题,他也给你提供接口实现扩展.</p>
+<ul>
+<li>有些超出当前开发的掌握的习惯和规则</li>
+</ul>
+<p>spring cloud gateway 基于 springboot spring webflux project reactor实现的,很多当前已经习惯的开发模式 规范,在spring cloud gateway可能不太适用.</p>
+<h2 id="入门案例"><a href="#入门案例" class="headerlink" title="入门案例"></a>入门案例</h2><h3 id="需求-转发"><a href="#需求-转发" class="headerlink" title="需求(转发)"></a>需求(转发)</h3><ol>
+<li>请求访问网关(网关也是web应用)</li>
+<li>网关根据这个请求,做请求的转发 ,转给stock</li>
+<li>stock具备处理这个请求的能力</li>
+</ol>
+<h3 id="案例步骤"><a href="#案例步骤" class="headerlink" title="案例步骤"></a>案例步骤</h3><ul>
+<li>创建一个网关maven工程</li>
+</ul>
+<p>提供依赖资源:</p>
+<p>spring-boot-starter-web</p>
+<p>gateway依赖</p>
+<p>loadbalancer: 网关支持的负载均衡计算组件.</p>
+<p>nacos-discovery: 整合nacos</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--由于gateway底层是project reactor和starter-web的tomcat冲突</span></span><br><span class="line"><span class="comment">        两种完全不一样的web容器 我们这里使用属性配置忽略掉冲突的配置--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-gateway<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--转发的案例是不使用nacos的,路由负载均衡的时候才使用--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-loadbalancer<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>常规的启动类(略)</p>
+</li>
+<li><p>编写转发功能的application.yml文件</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8999</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">gateway-server</span></span><br><span class="line">  <span class="attr">main:</span></span><br><span class="line">    <span class="comment"># 关闭了tomcat的servlet容器配置 不会和gateway冲突了</span></span><br><span class="line">    <span class="attr">web-application-type:</span> <span class="string">reactive</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="comment">#微服务网关</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="comment"># 当前所有请求进入网关的url都转发给stock</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="comment">#当前配置的没一个元素,都会在网关路由过滤器中添加一个路由对象</span></span><br><span class="line">      <span class="comment">#帮助网关记录请求的路由匹配</span></span><br><span class="line">          <span class="comment"># id 一个路由计算对象的id值,应该保证唯一</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">demo-test</span></span><br><span class="line">          <span class="comment"># uri 转发的目标地址</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">http://127.0.0.1:10012</span></span><br><span class="line">          <span class="comment"># 断言,根据断言的内容和规则,匹配进入网关的请求</span></span><br><span class="line">          <span class="comment"># 如果匹配上,才能由当前路由对象进行计算</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="comment"># 请求url地址中路径值 满足/**的匹配,就满足这个断言了</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/**</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="基于案例详细分析请求流转过程-重要-极其重要"><a href="#基于案例详细分析请求流转过程-重要-极其重要" class="headerlink" title="基于案例详细分析请求流转过程(重要,极其重要)"></a>基于案例详细分析请求流转过程(重要,极其重要)</h3><p>案例一:</p>
+<ol>
+<li>浏览器发送了一个请求: <a target="_blank" rel="noopener" href="http://localhost:8999/abc/abc?name=wangcuihua">http://localhost:8999/abc/abc?name=wangcuihua</a></li>
+</ol>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 可以进入网关</li>
+</ul>
+<ol start="2">
+<li>了解请求的url地址组成</li>
+</ol>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822111748182.png" alt="image-20230822111748182"></p>
+<p>http: 协议</p>
+<p>localhost: 域名,能够帮助请求访问找到服务器</p>
+<p>8999: 端口,找到服务器,找到对应接收请求的端口进程</p>
+<p>&#x2F;abc&#x2F;abc: path路径,看成是这个进程可以处理的资源path</p>
+<p>?name&#x3D;wang: 请求参数.</p>
+<ol start="3">
+<li>在网关中,根据path 进行断言的计算</li>
+</ol>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Path&#x3D;&#x2F;** 匹配 &#x2F;abc&#x2F;abc true</li>
+<li><input checked="" disabled="" type="checkbox"> Path&#x3D;&#x2F;cba&#x2F;** 匹配 &#x2F;abc&#x2F;abc false</li>
+</ul>
+<ol start="4">
+<li>网关根据匹配断言的结果 true 找到routes 的id(由哪一个路由对象来计算)</li>
+</ol>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> demo-test</li>
+</ul>
+<ol start="5">
+<li>根据uri实现转发的落地</li>
+</ol>
+<p>​	uri: <a target="_blank" rel="noopener" href="http://127.0.0.1:10012/">http://127.0.0.1:10012</a></p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 将请求path &#x2F;abc&#x2F;abc 拼接到uri中 <a target="_blank" rel="noopener" href="http://127.0.0.1:10012/abc/abc?name=wangcuihua">http://127.0.0.1:10012/abc/abc?name=wangcuihua</a></li>
+</ul>
+<p>​	6 . 网关向外转发了一个请求.</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 当前环境没有人处理这个请求</li>
+</ul>
+<p>导致网关转发就失败了.</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822112640305.png" alt="image-20230822112640305"></p>
+<ol start="7">
+<li>网关连接失败,返回500错误信息</li>
+</ol>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822112735273.png" alt="image-20230822112735273" style="zoom:50%;" />
+
+<p>案例二:</p>
+<p>请求url不变 stock 10012正常启动</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8999/abc/abc?name=wangcuihua">http://localhost:8999/abc/abc?name=wangcuihua</a></p>
+<p>经过前6步和案例一完全一样的流转逻辑,最终可以连接访问</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1:10012/abc/abc?name=wangcuihua">http://127.0.0.1:10012/abc/abc?name=wangcuihua</a></p>
+<ol>
+<li>由于后端服务实例,不具备处理&#x2F;abc&#x2F;abc资源请求,返回404</li>
+<li>网关将后端的处理结果返回给客户</li>
+<li>客户端浏览器看到404</li>
+</ol>
+<p>练习案例:</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8888/abc/abc">http://localhost:8888/abc/abc</a></p>
+<p>没有任何进程处理这个请求</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8999/doc.html">http://localhost:8999/doc.html</a></p>
+<p>网关转发给<a target="_blank" rel="noopener" href="http://127.0.0.1:10012/doc.html">http://127.0.0.1:10012/doc.html</a></p>
+<p>如果后端程序有这个资源,正常看到,没有这个资源,依然是404</p>
+<p>有接口文档页面资源,所以可以看到</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8999/base/stock/reduce/count">http://localhost:8999/base/stock/reduce/count</a></p>
+<p>网关转发给<a target="_blank" rel="noopener" href="http://127.0.0.1:10012/base/stock/reduce/count">http://127.0.0.1:10012/base/stock/reduce/count</a></p>
+<p>如果后端程序有这个资源,正常看到,没有这个资源,依然是404</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822114549204.png" alt="image-20230822114549204"></p>
+<h2 id="断言详解"><a href="#断言详解" class="headerlink" title="断言详解"></a>断言详解</h2><p>断言 predicates: 没有路由配置必备的一个属性.</p>
+<p>作用: 实现一个进入网关请求的mapping映射计算的.</p>
+<p>断言的方式,计算的功能,除了Path以外,有很多种.</p>
+<p>多种断言可以独立配置,也可以组合使用.</p>
+<p><strong>注意</strong>: 配置yaml值,语法中注意&#x3D;的使用,前后不能有空格.</p>
+<h3 id="After"><a href="#After" class="headerlink" title="After"></a>After</h3><p>案例:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">after_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">After</span> <span class="string">=</span> <span class="number">2017-01-20T17:42:47.789-07:00</span>[<span class="string">America/Denver</span>]</span><br></pre></td></tr></table></figure>
+
+<p>所有请求进入网关满足After的判断的,都会匹配这个叫做after_route的路由.</p>
+<p>在某个具体的时间点之后的请求.</p>
+<h3 id="Before"><a href="#Before" class="headerlink" title="Before"></a>Before</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">before_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Before=2017-01-20T17:42:47.789-07:00[America/Denver]</span></span><br></pre></td></tr></table></figure>
+
+<p>所有请求在这个时间点之前的,都满足匹配这个路由.</p>
+<h3 id="Between"><a href="#Between" class="headerlink" title="Between"></a>Between</h3><p>使用after+before也能实现between的功能.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">before_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Before=2017-01-21T17:42:47.789-07:00[America/Denver]</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">After=2017-01-20T17:42:47.789-07:00[America/Denver]</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">between_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Between=2017-01-20T17:42:47.789-07:00[America/Denver],</span> <span class="number">2017-01-21T17:42:47.789-07:00</span>[<span class="string">America/Denver</span>]</span><br></pre></td></tr></table></figure>
+
+<p>在两个时间点之间的请求满足断言匹配当前路由</p>
+<p>以上的3断言和访问时间有关.</p>
+<h3 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">cookie_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Cookie=chocolate,</span> <span class="string">abc</span></span><br></pre></td></tr></table></figure>
+
+<p>要求请求必须携带一个cookie值,名字叫chocolate ,value值 必须满足 {ch.p}正则表达</p>
+<p>式. 如果断言的的值不是正则,就是一个固定值,就是判断相等.</p>
+<h3 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">header_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Header=X-Request-Id,</span> <span class="string">\d+</span></span><br></pre></td></tr></table></figure>
+
+<p>匹配请求必须携带一个头 ,名字为X-Request-Id,头的值满足正则 \d+(一个或者多个数字);</p>
+<h3 id="Query"><a href="#Query" class="headerlink" title="Query"></a>Query</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">query_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Query=green</span></span><br></pre></td></tr></table></figure>
+
+<p>请求中要有?green这个值,就满足断言匹配</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">query_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Query=green,red</span></span><br></pre></td></tr></table></figure>
+
+<p>请求中要有?green&#x3D;red满足断言的匹配</p>
+<h3 id="Host"><a href="#Host" class="headerlink" title="Host"></a>Host</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">host_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Host=**.somehost.org,**.anotherhost.org</span></span><br></pre></td></tr></table></figure>
+
+<p>请求Host头,如果是 <a target="_blank" rel="noopener" href="http://www.somehost.org/">www.somehost.org</a>; order.somehost.org; cart.somehost.org;</p>
+<p>主域名(一级域名): jd.com;taobao.com</p>
+<p>二级域名: <strong>passport</strong>.jd.com;<strong>login</strong>.taobao.com</p>
+<p>三级域名:<strong>aa</strong>.passport.jd.com;<strong>bb</strong>.passport.jd.com</p>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">method_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Method=GET,POST</span></span><br></pre></td></tr></table></figure>
+
+<p>请求方式必须是GET或者POST其中一个,就能满足这个断言要求.</p>
+<h3 id="Path"><a href="#Path" class="headerlink" title="Path"></a>Path</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">path_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Path=/red/&#123;segment&#125;,/blue/&#123;segment&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>请求的路径 满足&#x2F;red&#x2F;{任意},或者 &#x2F;blue&#x2F;{任意}</p>
+<p>同时可以是ANT的匹配字符</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>规则</th>
+<th>案例</th>
+<th>匹配</th>
+<th>不匹配</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>?</td>
+<td>匹配单个字符</td>
+<td>&#x2F;z&#x2F;?</td>
+<td>&#x2F;z&#x2F;a,&#x2F;z&#x2F;b</td>
+<td>&#x2F;z&#x2F;ab,&#x2F;z&#x2F;a&#x2F;b&#x2F;c</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配一级字符串</td>
+<td>&#x2F;z&#x2F;*</td>
+<td>&#x2F;z&#x2F;abc,&#x2F;z&#x2F;cba</td>
+<td>&#x2F;z&#x2F;a&#x2F;b&#x2F;c</td>
+</tr>
+<tr>
+<td>**</td>
+<td>匹配一级或多级字符串</td>
+<td>&#x2F;z&#x2F;**</td>
+<td>&#x2F;z&#x2F;a,&#x2F;z&#x2F;abc,&#x2F;z&#x2F;a&#x2F;b&#x2F;c</td>
+<td>&#x2F;<strong>x</strong>&#x2F;a,&#x2F;<strong>y</strong>&#x2F;a&#x2F;b&#x2F;c</td>
+</tr>
+</tbody></table>
+<h3 id="Remote"><a href="#Remote" class="headerlink" title="Remote"></a>Remote</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">remoteaddr_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">RemoteAddr=192.168.1.1/24</span></span><br></pre></td></tr></table></figure>
+
+<p>在24个字节范围之内,子网掩码(255.255.0.0). 网络地址在此网段满足 断言的</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 192.168.1.10 </li>
+<li><input checked="" disabled="" type="checkbox"> 192.168.1.11</li>
+<li><input disabled="" type="checkbox"> 192.168.2.10 不匹配</li>
+</ul>
+<h3 id="Weight"><a href="#Weight" class="headerlink" title="Weight"></a>Weight</h3><p>权重断言</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">weight_high</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://weighthigh.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Weight=group1,</span> <span class="number">8</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">weight_low</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://weightlow.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">Weight=group1,</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>分散的转发了 两个路由(路由匹配规则相同),一批高并发请求,会按照8:2的比例</p>
+<p>转发调用到后端不同的服务,实例.</p>
+<h3 id="4-0-x-新的断言"><a href="#4-0-x-新的断言" class="headerlink" title="(4.0.x) 新的断言"></a>(4.0.x) 新的断言</h3><p>当前使用gateway是3.0.3 没有</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">xforwarded_remoteaddr_route</span></span><br><span class="line">        <span class="attr">uri:</span> <span class="string">https://example.org</span></span><br><span class="line">        <span class="attr">predicates:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">XForwardedRemoteAddr=192.168.1.1/24</span></span><br></pre></td></tr></table></figure>
+
+<p>请求Header 如果是转发(重定向),也有可能在后端处理请求,做重新访问的时候也会出现.</p>
+<p>要求头的值必须在这个ip网段范围之内.</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>平时我们使用的断言 最多的就2种</p>
+<p><strong>第一种</strong> Path</p>
+<p>微服务不同服务,请求path路径规则是不一样</p>
+<p>比如 </p>
+<ul>
+<li>- Path&#x3D;&#x2F;order&#x2F;** 表示订单服务</li>
+<li>- Path&#x3D;&#x2F;cart&#x2F;** 购物车服务</li>
+</ul>
+<p><strong>第二种</strong> Host</p>
+<p>微服务集群搭建,每个服务都独占一个域名</p>
+<p>比如</p>
+<ul>
+<li>- Host&#x3D;cart.csmall.com 购物车</li>
+<li>- Host&#x3D;search.csmall.com 搜索</li>
+</ul>
+<h2 id="路由负载均衡"><a href="#路由负载均衡" class="headerlink" title="路由负载均衡"></a>路由负载均衡</h2><h3 id="利用断言和路由映射关系实现负载均衡"><a href="#利用断言和路由映射关系实现负载均衡" class="headerlink" title="利用断言和路由映射关系实现负载均衡"></a>利用断言和路由映射关系实现负载均衡</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">routes:</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">id:</span> <span class="string">stock-10002</span></span><br><span class="line">	  <span class="attr">uri:</span> <span class="string">http://localhost:10002</span></span><br><span class="line">	  <span class="attr">predicates:</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Path=/stock/**</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Weight=group1,</span> <span class="number">1</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">id:</span> <span class="string">stock-10012</span></span><br><span class="line">	  <span class="attr">uri:</span> <span class="string">http://localhost:10012</span></span><br><span class="line">	  <span class="attr">predicates:</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Path=/stock/**</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Weight=group1,</span> <span class="number">1</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">id:</span> <span class="string">stock-10022</span></span><br><span class="line">	  <span class="attr">uri:</span> <span class="string">http://localhost:10022</span></span><br><span class="line">	  <span class="attr">predicates:</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Path=/stock/**</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Weight=group1,</span> <span class="number">1</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">id:</span> <span class="string">stock-10032</span></span><br><span class="line">	  <span class="attr">uri:</span> <span class="string">http://localhost:10042</span></span><br><span class="line">	  <span class="attr">predicates:</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Path=/stock/**</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Weight=group1,</span> <span class="number">1</span></span><br><span class="line">	<span class="bullet">-</span> <span class="attr">id:</span> <span class="string">stock-10042</span></span><br><span class="line">	  <span class="attr">uri:</span> <span class="string">http://localhost:10052</span></span><br><span class="line">	  <span class="attr">predicates:</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Path=/stock/**</span></span><br><span class="line">	  <span class="bullet">-</span> <span class="string">Weight=group1,</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>这样做不合理,负载均衡是静态配置,而不是动态分布.</p>
+<p>要利用nacos注册信息(动态),实现网关loadbalance负载均衡计算.</p>
+<p>要将网关整合到nacos</p>
+<h3 id="整合nacos实现负载均衡"><a href="#整合nacos实现负载均衡" class="headerlink" title="整合nacos实现负载均衡"></a>整合nacos实现负载均衡</h3><p>架构图:</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822152201187.png" alt="image-20230822152201187"></p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 引入网关工程 nacos客户端组件</li>
+<li><input checked="" disabled="" type="checkbox"> 网关本身不具备负载均衡计算能力,引入负载均衡 网关gateway支持 loadbalancer</li>
+<li><input checked="" disabled="" type="checkbox"> 在网关配置nacos的服务端信息</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">	<span class="attr">cloud:</span></span><br><span class="line">		<span class="attr">nacos:</span></span><br><span class="line">			<span class="attr">discovery:</span></span><br><span class="line">				<span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br><span class="line">				<span class="comment"># 网关没有注册的必要</span></span><br><span class="line">				<span class="attr">register-enabled:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 修改一下网关路由的配置uri</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">gateway-server</span></span><br><span class="line">  <span class="attr">main:</span></span><br><span class="line">    <span class="comment"># 关闭了tomcat的servlet容器配置 不会和gateway冲突了</span></span><br><span class="line">    <span class="attr">web-application-type:</span> <span class="string">reactive</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="comment">#nacos注册关闭,避免启动失败</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">register-enabled:</span> <span class="literal">false</span></span><br><span class="line">    <span class="comment">#微服务网关</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="comment"># 当前所有请求进入网关的url都转发给stock</span></span><br><span class="line">      <span class="attr">routes:</span></span><br><span class="line">      <span class="comment">#当前配置的没一个元素,都会在网关路由过滤器中添加一个路由对象</span></span><br><span class="line">      <span class="comment">#帮助网关记录请求的路由匹配</span></span><br><span class="line">          <span class="comment"># id 一个路由计算对象的id值,应该保证唯一</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">demo-test01</span></span><br><span class="line">          <span class="comment"># uri lb 表示负载均衡计算 luban-demo-stock 目标服务</span></span><br><span class="line">          <span class="attr">uri:</span> <span class="string">lb://luban-demo-stock</span></span><br><span class="line">          <span class="comment"># 断言,根据断言的内容和规则,匹配进入网关的请求</span></span><br><span class="line">          <span class="comment"># 如果匹配上,才能由当前路由对象进行计算</span></span><br><span class="line">          <span class="attr">predicates:</span></span><br><span class="line">            <span class="comment"># 请求url地址中路径值 满足/**的匹配,就满足这个断言了</span></span><br><span class="line">            <span class="bullet">-</span> <span class="string">Path=/**</span></span><br></pre></td></tr></table></figure>
+
+<p>测试:</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8999/base/stock/reduce/count?commodityCode=PC100&reduceCount=5">http://localhost:8999/base/stock/reduce/count?commodityCode=PC100&amp;reduceCount=5</a></p>
+<h3 id="负载均衡调用流程"><a href="#负载均衡调用流程" class="headerlink" title="负载均衡调用流程"></a>负载均衡调用流程</h3><ol>
+<li>浏览器 发送请求</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="http://localhost:8999/base/stock/reduce/count?commodityCode=PC100&reduceCount=5">http://localhost:8999/base/stock/reduce/count?commodityCode=PC100&amp;reduceCount=5</a></p>
+<ol start="2">
+<li>网关接收请求</li>
+<li>利用网关配置的路由断言规则,计算当前请求匹配到的所有路由</li>
+<li>匹配到Path&#x3D;&#x2F;** demo-test的路由规则</li>
+<li>路由过滤器通过路由uri 找到目标访问地址: lb:&#x2F;&#x2F;luban-demo-stock</li>
+<li>调用当前网关负载均衡计算器loadbalancer luban-demo-stock</li>
+<li>计算器利用nacos-client抓取的注册信息 找到luban-demo-stock</li>
+<li>得到服务下所有的实例集合 List&lt;ServiceInstance&gt;</li>
+<li>做负载均衡计算得到一个本次请求需要用到的具体服务实例 假设10002</li>
+<li>结果返回给路由过滤器 <a target="_blank" rel="noopener" href="http://127.0.0.1:10002/base/stock/reduce/count?commodityCode=PC100&reduceCount=5">http://127.0.0.1:10002/base/stock/reduce/count?commodityCode=PC100&amp;reduceCount=5</a></li>
+<li>调用远程代理,实现远程访问</li>
+<li>10002的stock实例接收到请求,处理请求,将响应返回</li>
+</ol>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230822154512997.png" alt="image-20230822154512997"></p>
+<h2 id="动态路由"><a href="#动态路由" class="headerlink" title="动态路由"></a>动态路由</h2><p>gateway 专门为微服务结构,准备了一个 动态服务路由的配置逻辑.</p>
+<p>使用所有的服务名称作为前缀 - Path&#x3D;&#x2F;{service.name}&#x2F;**.</p>
+<p>映射不同的路由规则,然后即将访问出去之前,将服务名称过滤掉.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8999</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">gateway-server</span></span><br><span class="line">  <span class="attr">main:</span></span><br><span class="line">    <span class="comment"># 关闭了tomcat的servlet容器配置 不会和gateway冲突了</span></span><br><span class="line">    <span class="attr">web-application-type:</span> <span class="string">reactive</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="comment">#nacos注册关闭,避免启动失败</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">register-enabled:</span> <span class="literal">false</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br><span class="line">    <span class="comment">#微服务网关</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="comment">#动态路由定位器</span></span><br><span class="line">        <span class="attr">locator:</span></span><br><span class="line">          <span class="attr">enabled:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>动态路由的流转详细过程</p>
+<p>案例一:</p>
+<p>请求地址: <a target="_blank" rel="noopener" href="http://localhost:8999/luban-demo-cart/doc.html">http://localhost:8999/luban-demo-cart/doc.html</a></p>
+<p>当我们在网关中配置 动态路由后. 网关会根据nacos抓取的服务信息,自动配置路由</p>
+<p>当前环境抓取到两个服务 luban-demo-stock luban-demo-cart</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">routes:</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">luban-demo-stock</span></span><br><span class="line">   <span class="attr">uri:</span> <span class="string">lb://luban-demo-stock</span></span><br><span class="line">   <span class="attr">predicates:</span></span><br><span class="line">   <span class="bullet">-</span> <span class="string">Path=/luban-demo-stock/**</span></span><br><span class="line">   <span class="attr">filters:</span></span><br><span class="line">   <span class="bullet">-</span> <span class="string">StripPrefix=1</span></span><br><span class="line"> <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">luban-demo-cart</span></span><br><span class="line">   <span class="attr">uri:</span> <span class="string">lb://luban-demo-cart</span></span><br><span class="line">   <span class="attr">predicates:</span></span><br><span class="line">   <span class="bullet">-</span> <span class="string">Path=/luban-demo-cart/**</span></span><br><span class="line">   <span class="attr">filters:</span></span><br><span class="line">   <span class="bullet">-</span> <span class="string">StripPrefix=1</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>url <a target="_blank" rel="noopener" href="http://localhost:8999/luban-demo-cart/doc.html">http://localhost:8999/luban-demo-cart/doc.html</a></li>
+<li>进入网关</li>
+<li>匹配断言满足-Path &#x3D; &#x2F;luban-demo-cart&#x2F;**</li>
+<li>找到路由规则id luban-demo-cart</li>
+<li>负载均衡计算 lb:&#x2F;&#x2F;luban-demo-cart 10005 10015 10025其中一个</li>
+<li><a target="_blank" rel="noopener" href="http://localhost:10015/luban-demo-cart/doc.html">http://localhost:10015/luban-demo-cart/doc.html</a></li>
+<li>过滤器计算 将第一个路径省略</li>
+<li><a target="_blank" rel="noopener" href="http://localhost:10015/doc.html">http://localhost:10015/doc.html</a></li>
+</ol>
+<h1 id="网关CORS"><a href="#网关CORS" class="headerlink" title="网关CORS"></a>网关CORS</h1><h2 id="跨域访问问题"><a href="#跨域访问问题" class="headerlink" title="跨域访问问题"></a>跨域访问问题</h2><p>通过前端请求,发起向后的访问,如果访问的origin原地址和目标地址 </p>
+<p><strong>域名</strong>  <strong>ip</strong>  <strong>端口</strong>  <strong>协议</strong> 有一个不一样的,就会形成跨域,默认 springmvc web应用需要后端处理跨域问题的</p>
+<table>
+<thead>
+<tr>
+<th>源</th>
+<th>目标</th>
+<th>是否跨域</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="http://www.aa.com/">www.aa.com</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.bb.com/">www.bb.com</a></td>
+<td>true</td>
+</tr>
+<tr>
+<td>cart.aa.com</td>
+<td>order.aa.com</td>
+<td>true</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.aa.com/">http://www.aa.com</a></td>
+<td><a target="_blank" rel="noopener" href="https://www.aa.com/">https://www.aa.com</a></td>
+<td>true</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.aa.com:8080/">http://www.aa.com:8080</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.aa.com/">http://www.aa.com</a></td>
+<td>true</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.aa.com/">http://www.aa.com</a></td>
+<td><a target="_blank" rel="noopener" href="http://119.110.112.113/">http://119.110.112.113</a></td>
+<td>true</td>
+</tr>
+</tbody></table>
+<h2 id="网关做跨域处理"><a href="#网关做跨域处理" class="headerlink" title="网关做跨域处理"></a>网关做跨域处理</h2><p>gateway提供了一个内部CorsConfiguration配置类,所需要用到的属性</p>
+<p>全部都可以在yaml文件中配置.</p>
+<p>之前配置类WebMVCConfigurer</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addCorsMappings</span><span class="params">(CorsRegistry registry)</span> &#123;</span><br><span class="line">    registry.addMapping(<span class="string">&quot;/**&quot;</span>)</span><br><span class="line">            .allowedHeaders(<span class="string">&quot;*&quot;</span>)</span><br><span class="line">            .allowedMethods(<span class="string">&quot;*&quot;</span>)</span><br><span class="line">            .allowedOriginPatterns(<span class="string">&quot;*&quot;</span>)</span><br><span class="line">            .allowCredentials(<span class="literal">true</span>)</span><br><span class="line">            .maxAge(<span class="number">3600</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>addMapping(“&#x2F;**”): 对进入的哪些资源范围做跨域的处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addMapping(<span class="string">&quot;/abc/**&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>allowedHeaders(“*”): 允许origin源 携带到当前服务的头</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allowedHeaders(<span class="string">&quot;Accept&quot;</span>,<span class="string">&quot;X-Request-Header&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>allowedMethods(“*”): 允许origin源跨域的请求方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allowedMethods(<span class="string">&quot;GET&quot;</span>,<span class="string">&quot;POST&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>allowedOriginPatterns(“*”): 允许origin头中域名的格式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allowedOriginPatterns(<span class="string">&quot;**.csmall.com&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>allowCredentials(true): 是否允许携带验证票据 也是限制跨域是否携带头</p>
+<p>maxAge(3600): 每次跨域大多数访问逻辑,先发起一个OPTIONS验证,验证是否允许跨域.如果验证成功,后续请求就不再发送OPTIONS验证了,但是持续时间maxAge.</p>
+<p>在网关中可以配置yaml文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">gateway-server</span></span><br><span class="line">  <span class="attr">main:</span></span><br><span class="line">    <span class="comment"># 关闭了tomcat的servlet容器配置 不会和gateway冲突了</span></span><br><span class="line">    <span class="attr">web-application-type:</span> <span class="string">reactive</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="comment">#nacos注册关闭,避免启动失败</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="attr">register-enabled:</span> <span class="literal">false</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br><span class="line">    <span class="comment">#微服务网关</span></span><br><span class="line">    <span class="attr">gateway:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="comment">#动态路由定位器</span></span><br><span class="line">        <span class="attr">locator:</span></span><br><span class="line">          <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">globalcors:</span></span><br><span class="line">        <span class="attr">cors-configurations:</span></span><br><span class="line">          <span class="string">&#x27;[/**]&#x27;</span><span class="string">:</span></span><br><span class="line">            <span class="attr">allowedOrigins:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line">              <span class="comment">#- &quot;www.csmall.com&quot;</span></span><br><span class="line">              <span class="comment">#- &quot;www.luban.com&quot;</span></span><br><span class="line">            <span class="attr">allowedHeaders:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line">              <span class="comment">#- &quot;Accept&quot;</span></span><br><span class="line">            <span class="attr">allowedMethods:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line">              <span class="comment">#- &quot;GET&quot;</span></span><br><span class="line">            <span class="attr">allowCredentials:</span> <span class="string">&quot;*&quot;</span></span><br><span class="line">            <span class="attr">maxAge:</span> <span class="number">7200</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="网关过滤器"><a href="#网关过滤器" class="headerlink" title="网关过滤器"></a>网关过滤器</h1><p>除了内置的过滤逻辑,允许我们开发者对网关过滤器功能做扩展.</p>
+<h2 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h2><p>每一个web应用,都可以存在过滤器和拦截器. <strong>springmvc中页过滤器和拦截器</strong>(gateway的过滤器概念和逻辑是相似的,但是代码,使用习惯,编码api相当不相同)</p>
+<p><strong>特点:</strong></p>
+<ul>
+<li>各司其职</li>
+<li>顺序执行</li>
+<li>特殊情况下可以实现拦截</li>
+</ul>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823093639951.png" alt="image-20230823093639951" style="zoom: 50%;" />
+
+<h2 id="入门的gateway过滤器案例"><a href="#入门的gateway过滤器案例" class="headerlink" title="入门的gateway过滤器案例"></a>入门的gateway过滤器案例</h2><p>在网关中添加过滤器,并使其生效的方法步骤</p>
+<ol>
+<li>创建类,实现接口</li>
+<li>spring容器bean对象管理</li>
+</ol>
+<h3 id="创建过滤器类"><a href="#创建过滤器类" class="headerlink" title="创建过滤器类"></a>创建过滤器类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tarena.luban.demo.gateway.filters;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.gateway.filter.GatewayFilterChain;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.gateway.filter.GlobalFilter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.server.ServerWebExchange;</span><br><span class="line"><span class="keyword">import</span> reactor.core.publisher.Mono;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.SQLOutput;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">实现接口</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyFilter01</span> <span class="keyword">implements</span> <span class="title class_">GlobalFilter</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> exchange 交换机spring webflux框架 包装了请求和响应的对象</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> chain 过滤链的对象,处理完过滤逻辑,到底要如何整合回过滤链</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Mono 纯粹的spring webflux(函数式编程 lamda) 在这只关注如何用api生成对应Mono</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Mono&lt;Void&gt; <span class="title function_">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;请求进入到过滤器01&quot;</span>);</span><br><span class="line">        <span class="comment">//执行完过滤逻辑,允许请求继续向下 向后</span></span><br><span class="line">        Mono&lt;Void&gt; filter = chain.filter(exchange);</span><br><span class="line">        <span class="keyword">return</span> filter;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只在请求进入过滤器时,做了打印标识.</p>
+<h3 id="自定义全局过滤器位置"><a href="#自定义全局过滤器位置" class="headerlink" title="自定义全局过滤器位置"></a>自定义全局过滤器位置</h3><p>当前网关 有几个大的模块 他们的顺序</p>
+<ol>
+<li>通过断言做映射计算找到路由配置</li>
+<li>根据路由配置 计算uri访问方式</li>
+<li>如果lb协议 需要负载均衡计算器</li>
+<li>如果http协议直接向后调用</li>
+<li><strong>调用之前</strong>,会进入我们自定义的过滤器</li>
+</ol>
+<h2 id="过滤器的其它一些功能"><a href="#过滤器的其它一些功能" class="headerlink" title="过滤器的其它一些功能"></a>过滤器的其它一些功能</h2><h3 id="使用案例1"><a href="#使用案例1" class="headerlink" title="使用案例1"></a>使用案例1</h3><p>需求: 拿到请求和响应对象,从请求对象里,获取路由计算结果path.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title function_">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;请求进入到过滤器01&quot;</span>);</span><br><span class="line">    <span class="comment">//exchange.getSession();</span></span><br><span class="line">    <span class="type">ServerHttpRequest</span> <span class="variable">request</span> <span class="operator">=</span> exchange.getRequest();</span><br><span class="line">    <span class="comment">//获取请求路径</span></span><br><span class="line">    <span class="type">URI</span> <span class="variable">uri</span> <span class="operator">=</span> request.getURI();</span><br><span class="line">    System.out.println(<span class="string">&quot;URI:&quot;</span>+uri.toString());</span><br><span class="line">    <span class="type">RequestPath</span> <span class="variable">path</span> <span class="operator">=</span> request.getPath();</span><br><span class="line">    System.out.println(<span class="string">&quot;path:&quot;</span>+path.toString());</span><br><span class="line">    <span class="type">ServerHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> exchange.getResponse();</span><br><span class="line">    <span class="comment">//执行完过滤逻辑,允许请求继续向下 向后</span></span><br><span class="line">    Mono&lt;Void&gt; filter = chain.filter(exchange);</span><br><span class="line">    <span class="keyword">return</span> filter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用url测试访问: <a target="_blank" rel="noopener" href="http://localhost:8999/luban-demo-stock/abc">http://localhost:8999/luban-demo-stock/abc</a></p>
+<p>打印uri: <a target="_blank" rel="noopener" href="http://localhost:8999/abc">http://localhost:8999/abc</a></p>
+<p>打印path:&#x2F;abc</p>
+<h3 id="使用案例2"><a href="#使用案例2" class="headerlink" title="使用案例2"></a>使用案例2</h3><p>需求: 可以判断一下请求是否携带了一个参数query 名字 叫token </p>
+<p>如果携带了,放行,过滤器向后调用,如果没有携带.在这个过滤器拦截这个请求.</p>
+<p>扩展(结合之前JWT的流程,在网关过滤器中验证解析JWT,如果解析成功,通过,没成功拦截返回未登录的提示);</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title function_">filter</span><span class="params">(ServerWebExchange exchange, GatewayFilterChain chain)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;请求进入到过滤器01&quot;</span>);</span><br><span class="line">    <span class="comment">//案例1的逻辑 ,从request获取path uri</span></span><br><span class="line">    <span class="type">ServerHttpRequest</span> <span class="variable">request</span> <span class="operator">=</span> exchange.getRequest();</span><br><span class="line">    <span class="comment">//获取请求路径</span></span><br><span class="line">    <span class="type">URI</span> <span class="variable">uri</span> <span class="operator">=</span> request.getURI();</span><br><span class="line">    System.out.println(<span class="string">&quot;URI:&quot;</span>+uri.toString());</span><br><span class="line">    <span class="type">RequestPath</span> <span class="variable">path</span> <span class="operator">=</span> request.getPath();</span><br><span class="line">    System.out.println(<span class="string">&quot;path:&quot;</span>+path.toString());</span><br><span class="line">    <span class="type">ServerHttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> exchange.getResponse();</span><br><span class="line">    <span class="comment">//案例2的逻辑 ?name=wang&amp;jobs%5B0%5D=police&amp;jobs%5B1%5D=docter</span></span><br><span class="line">    MultiValueMap&lt;String, String&gt; queryParams = request.getQueryParams();</span><br><span class="line">    <span class="comment">// name List&lt;String&gt; 元素是一个 值是wang</span></span><br><span class="line">    <span class="comment">// jobs List&lt;String&gt; 元素有2个 0 police 1 docter</span></span><br><span class="line">    <span class="type">boolean</span> <span class="variable">exists</span> <span class="operator">=</span> queryParams.containsKey(<span class="string">&quot;token&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (exists)&#123;</span><br><span class="line">        <span class="comment">//存在则合法</span></span><br><span class="line">        Mono&lt;Void&gt; filter = chain.filter(exchange);</span><br><span class="line">        <span class="keyword">return</span> filter;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//为了防止乱码 contentType &quot;application/json;charset=utf-8&quot;</span></span><br><span class="line">        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);</span><br><span class="line">        <span class="comment">//TODO 一般返回一个Result对象</span></span><br><span class="line">        <span class="comment">//response响应数据 输出回客户端</span></span><br><span class="line">        <span class="keyword">return</span> response.writeWith(Mono.fromSupplier(<span class="keyword">new</span> <span class="title class_">Supplier</span>&lt;DataBuffer&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> DataBuffer <span class="title function_">get</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="comment">//响应体的字符串</span></span><br><span class="line">                String json=<span class="string">&quot;你没有携带token&quot;</span>;</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">                        response.bufferFactory().wrap(</span><br><span class="line">                                json.getBytes(StandardCharsets.UTF_8));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用案例3"><a href="#使用案例3" class="headerlink" title="使用案例3"></a>使用案例3</h3><p>需求: 定义myfilter01和myfilter02过滤器执行的先后顺序</p>
+<p>两个过滤器同时生效要不要考虑先后执行的顺序问题?</p>
+<ul>
+<li>实心ordered接口 定义执行顺序</li>
+</ul>
+<p>可以在过滤器类上实现接口Ordered.定义每个过滤器具体顺序</p>
+<p>需要实现一个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getOrder</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">//二进制长什么样 1 31个0</span></span><br><span class="line">    <span class="comment">//32个1 -1</span></span><br><span class="line">    <span class="comment">//最大正整数2进制 31位个1</span></span><br><span class="line">    <span class="keyword">return</span> Integer.MIN_VALUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回值 整数,值越小,执行顺序越靠前.</p>
+<p>如果值相同(只在测试的时候做),将会判断bean对象的id字符串顺序</p>
+<p>0123456789 ABCDEFG…Z abcdefg…z</p>
+<p>底层调用的是compare方法实现.</p>
+<p>myfilter01 &lt; myfilter02</p>
+<ul>
+<li>getOrder的赋值特点</li>
+</ul>
+<p>order顺序值,为了方便扩展,为了方便代码更新迭代</p>
+<p>一般都不使用顺序数值 1 2 3 4 5 6 7 8 9 10</p>
+<p>提供一个递增的step步数 0 100 200 300 400 500  550 600 700</p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>结合之前登录认证流程,在网关中的过滤器应该执行编写什么样的逻辑?完成什么样的功能?存在什么样的问题?</p>
+<h3 id="登录认证流程"><a href="#登录认证流程" class="headerlink" title="登录认证流程"></a>登录认证流程</h3><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823114511269.png" alt="image-20230823114511269" style="zoom: 67%;" />
+
+<h3 id="有了网关登录认证流程"><a href="#有了网关登录认证流程" class="headerlink" title="有了网关登录认证流程"></a>有了网关登录认证流程</h3><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823115218588.png" alt="image-20230823115218588" style="zoom:67%;" />
+
+<p>加入网关之后,可以利用网关的过滤器逻辑,实现统一的身份验证(JWT解析).</p>
+<p>存在的问题:</p>
+<ol>
+<li>当初的后端解析,可以实现认证的,因为解析jwt之后拿到用户身份信息</li>
+<li>现在网关解析jwt,解析结果如果不传递给后端服务,后端是无法进行认证(不知道订单是谁的,不知道购物车是谁的.)</li>
+</ol>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway.png"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/25/SpringBoot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/" rel="prev" title="SpringBoot自动配置">
+                  <i class="fa fa-angle-left"></i> SpringBoot自动配置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/25/Sentinel/" rel="next" title="Sentinel">
+                  Sentinel <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sanpoi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:51</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Redis（Remote Dictionary Server）是一个开源的内存数据存储系统，常被称为缓存数据库、键值存储或数据结构服务器。它以键值对的形式存储数据，并将这些数据保留在内存中，从而实现了快速读写操作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/08/20/Redis/index.html">
+<meta property="og:site_name" content="Sanpoi">
+<meta property="og:description" content="Redis（Remote Dictionary Server）是一个开源的内存数据存储系统，常被称为缓存数据库、键值存储或数据结构服务器。它以键值对的形式存储数据，并将这些数据保留在内存中，从而实现了快速读写操作。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807173334560.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807173738567.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807173823476.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807175650692.png">
+<meta property="article:published_time" content="2023-08-20T06:46:58.000Z">
+<meta property="article:modified_time" content="2023-08-20T07:05:16.331Z">
+<meta property="article:author" content="Sanpoi">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807173334560.png">
+
+
+<link rel="canonical" href="https://sanpoi6.github.io/2023/08/20/Redis/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/20/Redis/","path":"2023/08/20/Redis/","title":"Redis"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Redis | Sanpoi</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sanpoi</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">东隅已逝，桑榆非晚</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8ERedis"><span class="nav-number">1.</span> <span class="nav-text">关于Redis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">Redis中的常用命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">Redis中的数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis%E4%B8%AD%E7%9A%84list%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">Redis中的list类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis%E7%BC%96%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">Redis编程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE"><span class="nav-number">6.</span> <span class="nav-text">使用Redis缓存数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Redis%E7%BC%93%E5%AD%98%E8%B5%84%E8%AE%AF%E7%9A%84%E7%B1%BB%E5%88%AB%E5%88%97%E8%A1%A8"><span class="nav-number">7.</span> <span class="nav-text">使用Redis缓存资讯的类别列表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ApplicationRunner%E7%BC%93%E5%AD%98%E9%A2%84%E7%83%AD"><span class="nav-number">8.</span> <span class="nav-text">使用ApplicationRunner缓存预热</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="nav-number">9.</span> <span class="nav-text">计划任务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8ERedis%E4%B8%AD%E7%9A%84hash%E7%B1%BB%E5%9E%8B"><span class="nav-number">10.</span> <span class="nav-text">关于Redis中的hash类型</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sanpoi"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Sanpoi</p>
+  <div class="site-description" itemprop="description">人无远虑，必有近忧</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/20/Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Sanpoi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanpoi">
+      <meta itemprop="description" content="人无远虑，必有近忧">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Redis | Sanpoi">
+      <meta itemprop="description" content="Redis（Remote Dictionary Server）是一个开源的内存数据存储系统，常被称为缓存数据库、键值存储或数据结构服务器。它以键值对的形式存储数据，并将这些数据保留在内存中，从而实现了快速读写操作。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-08-20 14:46:58 / 修改时间：15:05:16" itemprop="dateCreated datePublished" datetime="2023-08-20T14:46:58+08:00">2023-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">数据库相关</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">Redis（Remote Dictionary Server）是一个开源的内存数据存储系统，常被称为缓存数据库、键值存储或数据结构服务器。它以键值对的形式存储数据，并将这些数据保留在内存中，从而实现了快速读写操作。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="关于Redis"><a href="#关于Redis" class="headerlink" title="关于Redis"></a>关于Redis</h1><p>Redis是一款基于内存的、使用K-V结构存储数据的NoSQL非关系型数据库。</p>
+<blockquote>
+<p>数据库：数据的仓库，只要能够实现数据的读写，这类的软件都可以称之为数据库，通常，在没有特定的修饰的表达中，泛指“关系型数据库”。</p>
+<p>非关系型数据库：对所有的数据一视同仁，并不表现数据之间的关系。</p>
+<p>NoSQL：No SQL &#x2F; No Operation SQL，不使用SQL语句操作数据库的数据。</p>
+<p>基于内存的：Redis的数据是直接存储在内存中的。注意：Redis会自动的将所管理的数据同步到磁盘上，并且，在每次启动时都会自动将磁盘上的数据同步到内存中，所以，即使计算机重启或断电，Redis中的数据基本上不会丢失。</p>
+</blockquote>
+<p>由于Redis是基于内存的，所以，Redis的读写效率非常高！</p>
+<p>Redis的主要作用是“缓存数据”，通常的表现为：将关系型数据库（例如MySQL）中的数据取出，并存入到Redis中，后续，当需要读取相关数据时，不再从关系型数据库中读取，而是优先从Redis中读取！</p>
+<p>由于Redis是基于内存的，所以，读写效率远高于基于磁盘的关系型数据库，Redis的查询效率非常高，单次查询耗时更短，就可以承受更大的访问量，并减少了对关系型数据库的访问，从而起到保护关系型数据库的作用！</p>
+<h1 id="Redis中的常用命令"><a href="#Redis中的常用命令" class="headerlink" title="Redis中的常用命令"></a>Redis中的常用命令</h1><p>当登录Redis客户端（命令提示符变成<code>127.0.0.1&gt;6379</code>后），可以执行Redis的相关命令：</p>
+<ul>
+<li><p><code>set KEY VALUE</code>：存入数据，例如<code>set username1 tom</code>，如果KEY不存在，则表示新增数据，如果KEY已经存在，则会覆盖原有的数据，所以，<code>set</code>命令既是新增数据的命令，也是修改数据的命令</p>
+</li>
+<li><p><code>get KEY</code>：取出数据，例如<code>get username1</code>，如果KEY存在，则返回对应的VALUE，如果KEY不存在，则返回<code>(nil)</code>，相当于Java中的<code>null</code></p>
+</li>
+<li><p><code>keys PATTERN</code>：根据模式（<code>PATTERN</code>）获取KEY的列表，例如<code>keys username1</code>，如果存在匹配模式的KEY，则返回这些KEY的集合，如果不存在，则返回<code>(empty list or set)</code>，在使用模式时，可以使用<code>*</code>作为通配符，例如<code>keys username*</code>，将返回所有以<code>username</code>作为前缀的KEY，甚至，你可以使用<code>keys *</code>查询所有KEY</p>
+<ul>
+<li><strong>注意：</strong>在生产环境中，禁止使用此命令！</li>
+</ul>
+</li>
+<li><p><code>del KEY [KEY ...]</code>：根据若干个KEY（至少1个）删除数据，将返回受影响的数据量，例如执行<code>delete age1</code>，当此KEY存在时，将返回<code>(integer) 1</code>，当此KEY不存在时，将返回<code>(integer) 0</code></p>
+</li>
+<li><p><code>flushdb</code>：清空当前数据库</p>
+</li>
+</ul>
+<p>更多命令可参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/antLaddie/p/15362191.html">https://www.cnblogs.com/antLaddie/p/15362191.html</a></p>
+<h1 id="Redis中的数据类型"><a href="#Redis中的数据类型" class="headerlink" title="Redis中的数据类型"></a>Redis中的数据类型</h1><p>Redis中的经典数据类型有5种，分别是：string（一般值，例如字符串、数值等可以直接字面表示的） &#x2F; list &#x2F; set &#x2F; hash（对象，对应Java语句中的<code>Map</code>） &#x2F; zset</p>
+<p>另外，还有：bitmap &#x2F; hyperloglog &#x2F; Geo &#x2F; Stream</p>
+<h1 id="Redis中的list类型"><a href="#Redis中的list类型" class="headerlink" title="Redis中的list类型"></a>Redis中的list类型</h1><p>在Redis中，list类型的数据使用的是先进后出、后进先出的栈结构：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807173334560.png" alt="image-20230807173334560"></p>
+<p>在学习Redis时，应该把Redis中的栈结构水平旋转90度来理解！</p>
+<p>在操作Redis中的list数据时，可以从左侧进行压栈或弹栈的操作，例如：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807173738567.png" alt="image-20230807173738567"></p>
+<p>也可以从右侧进行压栈或弹栈的操作，例如：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807173823476.png" alt="image-20230807173823476"></p>
+<p>当从Redis中读取list的数据时，<strong>始终从左至右读取数据</strong>，通常，为了符合绝大多数开发者的使用习惯，会采“从右侧压入数据”的做法。</p>
+<p>在Redis的list中，每个数据都有2个下标值，分别是从左至右、从0开始顺序递增的下标，和从右至左、从-1开始顺序递减的下标，例如：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230807175650692.png" alt="image-20230807175650692"></p>
+<p>注意：在获取list的数据区间时，必须保证start在end的左侧！</p>
+<h1 id="Redis编程"><a href="#Redis编程" class="headerlink" title="Redis编程"></a>Redis编程</h1><p>在基于Spring Boot的项目中，实现Redis编程需要添加<code>spring-boot-starter-data-redis</code>依赖项。</p>
+<p>然后，需要使用<code>RedisTemplate</code>工具类的API实现Redis编程，通常会在配置类中使用<code>@Bean</code>方法来配置<code>RedisTemplate</code>，则后续可以在任何组件类中自动装配<code>RedisTemplate</code>，然后调用相关访问来访问数据。</p>
+<p>关于配置类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.tedu.tmall.admin.mall.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.connection.RedisConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.serializer.RedisSerializer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisConfiguration</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> RedisTemplate&lt;String, Serializable&gt; <span class="title function_">redisTemplate</span><span class="params">(</span></span><br><span class="line"><span class="params">            RedisConnectionFactory redisConnectionFactory)</span> &#123;</span><br><span class="line">        RedisTemplate&lt;String, Serializable&gt; redisTemplate = <span class="keyword">new</span> <span class="title class_">RedisTemplate</span>&lt;&gt;();</span><br><span class="line">        redisTemplate.setConnectionFactory(redisConnectionFactory);</span><br><span class="line">        redisTemplate.setKeySerializer(RedisSerializer.string());</span><br><span class="line">        redisTemplate.setValueSerializer(RedisSerializer.json());</span><br><span class="line">        <span class="keyword">return</span> redisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用Redis缓存数据"><a href="#使用Redis缓存数据" class="headerlink" title="使用Redis缓存数据"></a>使用Redis缓存数据</h1><p>把关系型数据库中的数据存储到Redis中，并且，后续需要查询数据时，将优先从Redis中查询（如果Redis中没有，则从关系型数据库中查询，或，如果Redis中没有，直接返回没有数据的结果），这种做法就叫“缓存”数据。</p>
+<p>当使用Redis缓存数据后，将存在<strong>数据一致性</strong>的问题！其典型表现就是：如果关系型数据库中的数据发生了变化，但是，Redis中的数据没有及时一并调整，就会导致Redis中的数据与关系型数据库中的数据并不一致！</p>
+<p>对于数据一致性问题，首先，要学会区分，你需要的到底是实时一致性，还是最终一致性。</p>
+<p>并且，虽然Redis适合缓存大量的数据，但是，如果某些数据的访问频率非常低，其实，也没有必要缓存到Redis中（需要查询时，直接从关系型数据库中查询即可），否则，任何数据都缓存到Redis中，则任何数据都需要处理数据一致性问题。</p>
+<p>所以，适合使用Redis缓存的数据应该是：</p>
+<ul>
+<li>访问频率较高，甚至很高</li>
+<li>对数据一致性要求并不严格</li>
+<li>数据被修改的频率非常低</li>
+</ul>
+<p>关于数据一致问题的解决方案大致有：</p>
+<ul>
+<li>实时同步：修改关系型数据库中的数据时，也一并修改Redis中缓存的数据</li>
+<li>手动同步：修改关系型数据库中的数据时，不会修改Redis中缓存的数据，仅当管理人员手动操作后，才会将关系型数据库的数据同步到Redis中</li>
+<li>定时同步：修改关系型数据库中的数据时，不会修改Redis中缓存的数据，但每间隔一段时间，或到了某个特定的时间点，就会自动将关系型数据库的数据同步到Redis中</li>
+</ul>
+<h1 id="使用Redis缓存资讯的类别列表"><a href="#使用Redis缓存资讯的类别列表" class="headerlink" title="使用Redis缓存资讯的类别列表"></a>使用Redis缓存资讯的类别列表</h1><p>首先，使用公共的接口文件定义Redis中的数据的Key值，例如，在<code>tmall-common</code>项目中创建此接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ContentCacheConsts</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">KEY_CATEGORY_LIST</span> <span class="operator">=</span> <span class="string">&quot;content:category:list&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要在<code>repository</code>层实现读写Redis，则先在项目的根包下创建<code>dao.cache.ICategoryCacheRepository</code>接口，此接口应该继承自以上定义Key值的接口，则此接口的实现类可以直接使用以上Key值，并在接口中声明抽象方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ICategoryCacheRepository</span> <span class="keyword">extends</span> <span class="title class_">ContentCacheConsts</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">saveList</span><span class="params">(List&lt;CategoryListItemVO&gt; categoryList)</span>;</span><br><span class="line"></span><br><span class="line">    List&lt;CategoryListItemVO&gt; <span class="title function_">list</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在项目的根包下创建<code>dao.cache.impl.CategoryCacheRepositoryImpl</code>类，实现以上接口，并重写接口中定义的抽象方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CategoryCacheRepositoryImpl</span> <span class="keyword">implements</span> <span class="title class_">ICategoryCacheRepository</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate&lt;String, Serializable&gt; redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">saveList</span><span class="params">(List&lt;CategoryListItemVO&gt; categoryList)</span> &#123;</span><br><span class="line">        ListOperations&lt;String, Serializable&gt; opsForList = redisTemplate.opsForList();</span><br><span class="line">        <span class="keyword">for</span> (CategoryListItemVO category : categoryList) &#123;</span><br><span class="line">            opsForList.rightPush(KEY_CATEGORY_LIST, category);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;CategoryListItemVO&gt; <span class="title function_">list</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">long</span> <span class="variable">end</span> <span class="operator">=</span> -<span class="number">1</span>;</span><br><span class="line">        ListOperations&lt;String, Serializable&gt; opsForList = redisTemplate.opsForList();</span><br><span class="line">        <span class="type">List</span> <span class="variable">range</span> <span class="operator">=</span> opsForList.range(KEY_CATEGORY_LIST, start, end);</span><br><span class="line">        <span class="keyword">return</span> range;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，需要在<code>service</code>层调用读写Redis的<code>repository</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> PageData&lt;CategoryListItemVO&gt; <span class="title function_">list</span><span class="params">(Integer pageNum)</span> &#123;</span><br><span class="line">    log.debug(<span class="string">&quot;开始处理【查询类别列表】的业务，页码：&#123;&#125;&quot;</span>, pageNum);</span><br><span class="line">    <span class="comment">// return categoryRepository.list(pageNum, defaultQueryPageSize);</span></span><br><span class="line">    List&lt;CategoryListItemVO&gt; list = categoryCacheRepository.list();</span><br><span class="line">    PageData&lt;CategoryListItemVO&gt; pageData = <span class="keyword">new</span> <span class="title class_">PageData</span>&lt;&gt;();</span><br><span class="line">    pageData.setList(list);</span><br><span class="line">    pageData.setMaxPage(<span class="number">1</span>);</span><br><span class="line">    pageData.setPageSize(list.size());</span><br><span class="line">    pageData.setTotal(list.size() + <span class="number">0L</span>);</span><br><span class="line">    pageData.setPageNum(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> pageData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过以上调整后，即可达成新的效果，Controller并不需要做任何调整。</p>
+<h1 id="使用ApplicationRunner缓存预热"><a href="#使用ApplicationRunner缓存预热" class="headerlink" title="使用ApplicationRunner缓存预热"></a>使用ApplicationRunner缓存预热</h1><p>在Spring Boot项目中，自定义组件类，实现<code>ApplicationRunner</code>接口，则重写的方法会在项目启动时自动执行，可以在此重写的方法中向Redis存入缓存的数据，即可实现缓存预热（启动项目时即加载缓存数据到Redis中）。</p>
+<p>示例代码：<code>ICategoryService</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 重建缓存</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">rebuildCache</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+
+<p>示例代码：<code>CategoryServiceImpl</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rebuildCache</span><span class="params">()</span> &#123;</span><br><span class="line">    List&lt;CategoryListItemVO&gt; list</span><br><span class="line">            = categoryRepository.list(<span class="number">1</span>, Integer.MAX_VALUE).getList();</span><br><span class="line">    categoryCacheRepository.deleteList();</span><br><span class="line">    categoryCacheRepository.saveList(list);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例代码：<code>CategoryCachePreload</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CategoryCachePreload</span> <span class="keyword">implements</span> <span class="title class_">ApplicationRunner</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ICategoryService categoryService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">(ApplicationArguments args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        categoryService.rebuildCache();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="计划任务"><a href="#计划任务" class="headerlink" title="计划任务"></a>计划任务</h1><p>在Spring Boot项目中，自定义组件类，并在组件中自定义方法，在方法上添加<code>@Scheduled</code>注解并配置计划任务的执行规则，即可使用计划任务。</p>
+<p>注意：在Spring Boot项目中，默认并不允许执行计划任务，必须在配置类上添加<code>@EnableScheduling</code>注解以开启，才允许执行计划任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CategoryCacheSchedule</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// fixedRate：执行频率，以【上一次开始执行的时间】来计算下一次的执行时间，以毫秒为单位</span></span><br><span class="line">    <span class="comment">// fixedDelay：执行间隔，以【上一次执行结束的时间】来计算下一次的执行时间，以毫秒为单位</span></span><br><span class="line">    <span class="comment">// cron：使用cron表达式来配置，cron表达式的值是一个字符串，由6~7个域组成，各域之间使用空格分隔</span></span><br><span class="line">    <span class="comment">// -- 在cron表达式中，各域从左至右分别表示：秒 分 时 日 月 周（星期） [年]</span></span><br><span class="line">    <span class="comment">// -- 各域的值可以使用通配符</span></span><br><span class="line">    <span class="comment">// -- 使用星号（*）表示任意值</span></span><br><span class="line">    <span class="comment">// -- 使用问号（?）表示不关心此域的值，仅可以用于“日”和“周”这2个域的值</span></span><br><span class="line">    <span class="comment">// -- 各域的值可以使用 x/y 格式的值，x表示起始值，y表示间隔周期</span></span><br><span class="line">    <span class="comment">// -- 例如在“分”的域位置设置为 1/5，则表示“分”的值为1时开始执行，且每间隔5分钟执行一次</span></span><br><span class="line">    <span class="comment">// cron表达式示例：</span></span><br><span class="line">    <span class="comment">// &quot;56 34 12 13 2 ? 2023&quot;表示：2023年2月13日12:34:56执行任务，不关心当天星期几</span></span><br><span class="line">    <span class="comment">// &quot;0/30 * * * * ?&quot;表示：每分钟的0秒时执行，且每30秒执行一次</span></span><br><span class="line">    <span class="comment">// 更多内容参考：</span></span><br><span class="line">    <span class="comment">// https://segmentfault.com/a/1190000021574315</span></span><br><span class="line">    <span class="comment">// https://blog.csdn.net/study_665/article/details/123506946</span></span><br><span class="line">    <span class="meta">@Scheduled(cron = &quot;0 0 10 ? 8 MON&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">rebuildCache</span><span class="params">()</span> &#123;</span><br><span class="line">        log.debug(<span class="string">&quot;CategoryCacheSchedule.rebuildCache()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="关于Redis中的hash类型"><a href="#关于Redis中的hash类型" class="headerlink" title="关于Redis中的hash类型"></a>关于Redis中的hash类型</h1><p>在Redis中的hash类型对应Java中的<code>Map</code>类型。</p>
+<p>建议添加<code>hutool</code>依赖，以实现对象与Map的相互转换：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">hutool.version</span>&gt;</span>5.8.15<span class="tag">&lt;/<span class="name">hutool.version</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- hutool：小工具集合 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.hutool<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hutool-all<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;hutool.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>读写hash数据示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 存入hash类型的数据</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">hashPutAll</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Category</span> <span class="variable">category</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Category</span>();</span><br><span class="line">    category.setId(<span class="number">998L</span>);</span><br><span class="line">    category.setName(<span class="string">&quot;测试类别998&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Map&lt;Object, Object&gt; map = new HashMap&lt;&gt;();</span></span><br><span class="line">    <span class="comment">// map.put(&quot;id&quot;, category.getId());</span></span><br><span class="line">    <span class="comment">// map.put(&quot;name&quot;, category.getName());</span></span><br><span class="line">    Map&lt;String, Object&gt; map = BeanUtil.beanToMap(category);</span><br><span class="line"></span><br><span class="line">    HashOperations&lt;String, Object, Object&gt; opsForHash = redisTemplate.opsForHash();</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> <span class="string">&quot;mall:category:item:998&quot;</span>;</span><br><span class="line">    opsForHash.putAll(key, map);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取Redis中的hash数据</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">hashEntries</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> <span class="string">&quot;mall:category:item:998&quot;</span>;</span><br><span class="line">    HashOperations&lt;String, Object, Object&gt; opsForHash = redisTemplate.opsForHash();</span><br><span class="line">    Map&lt;Object, Object&gt; entries = opsForHash.entries(key);</span><br><span class="line">    System.out.println(entries);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Category category = new Category();</span></span><br><span class="line">    <span class="comment">// category.setId(Long.valueOf(entries.get(&quot;id&quot;).toString()));</span></span><br><span class="line">    <span class="comment">// category.setName(entries.get(&quot;name&quot;).toString());</span></span><br><span class="line">    <span class="type">Category</span> <span class="variable">category</span> <span class="operator">=</span> BeanUtil.mapToBean(entries, Category.class, <span class="literal">true</span>, <span class="literal">null</span>);</span><br><span class="line">    System.out.println(category);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/19/Spring-Validation/" rel="prev" title="Spring Validation">
+                  <i class="fa fa-angle-left"></i> Spring Validation
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/20/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/" rel="next" title="数据库中的索引">
+                  数据库中的索引 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sanpoi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:51</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

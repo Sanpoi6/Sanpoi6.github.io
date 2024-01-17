@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Linux 是一个开源的类 Unix 操作系统内核，最早由芬兰的 Linus Torvalds 在 1991 年开发并发布。它是一个免费和自由的操作系统，被广泛应用于服务器、嵌入式设备、超级计算机等各种领域。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/09/11/Linux/index.html">
+<meta property="og:site_name" content="Sanpoi">
+<meta property="og:description" content="Linux 是一个开源的类 Unix 操作系统内核，最早由芬兰的 Linus Torvalds 在 1991 年开发并发布。它是一个免费和自由的操作系统，被广泛应用于服务器、嵌入式设备、超级计算机等各种领域。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911091550289.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911093310492.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911093548657.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911095013469.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911095211876.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911101756607.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911102113629.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911102353291.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911103608735.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911103655615.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911104909518.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911114300962.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911114311818.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911115810475.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911120250517.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911120342618.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911143552542.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911144747268.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911145257022.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911152424313.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911160234400.png">
+<meta property="og:image" content="d:\IDEA\IdeaProjects\jsd2304-notes\notes\DAY22\images\image-20230911163132406.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911163705215.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/linux.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911170900287.png">
+<meta property="article:published_time" content="2023-09-11T11:41:03.000Z">
+<meta property="article:modified_time" content="2023-09-11T11:51:01.029Z">
+<meta property="article:author" content="Sanpoi">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911091550289.png">
+
+
+<link rel="canonical" href="https://sanpoi6.github.io/2023/09/11/Linux/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/09/11/Linux/","path":"2023/09/11/Linux/","title":"Linux"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux | Sanpoi</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sanpoi</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">东隅已逝，桑榆非晚</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">Linux学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text">linux系统介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.3.</span> <span class="nav-text">虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.3.1.</span> <span class="nav-text">什么是虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="nav-number">1.3.2.</span> <span class="nav-text">虚拟机网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.3.3.</span> <span class="nav-text">客户端连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="nav-number">1.4.</span> <span class="nav-text">Linux系统基础命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%8F%90%E7%A4%BA%E7%AC%A6"><span class="nav-number">1.4.1.</span> <span class="nav-text">命令提示符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.4.2.</span> <span class="nav-text">命令格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cd-%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.3.</span> <span class="nav-text">cd 指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ls%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.4.</span> <span class="nav-text">ls指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mkdir%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.5.</span> <span class="nav-text">mkdir指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#touch%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.6.</span> <span class="nav-text">touch指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cp%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.7.</span> <span class="nav-text">cp指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mv%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.8.</span> <span class="nav-text">mv指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cat%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.9.</span> <span class="nav-text">cat指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tail%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.10.</span> <span class="nav-text">tail指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tar%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.11.</span> <span class="nav-text">tar指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9"><span class="nav-number">1.4.11.1.</span> <span class="nav-text">解压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9"><span class="nav-number">1.4.11.2.</span> <span class="nav-text">压缩</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wget%E6%8C%87%E4%BB%A4"><span class="nav-number">1.4.12.</span> <span class="nav-text">wget指令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8"><span class="nav-number">1.5.</span> <span class="nav-text">vim文本编辑器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vim%E7%9A%84%E4%B8%89%E7%A7%8D%E7%8A%B6%E6%80%81"><span class="nav-number">1.5.1.</span> <span class="nav-text">vim的三种状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%88%AC%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.2.</span> <span class="nav-text">一般模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.3.</span> <span class="nav-text">编辑模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.5.4.</span> <span class="nav-text">命令模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%8Blinux%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8Fjava"><span class="nav-number">1.6.</span> <span class="nav-text">安装配置一下linux系统的环境变量java</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk%E5%AE%89%E8%A3%85%E5%8C%85%E4%B8%8A%E4%BC%A0%E5%88%B0%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.6.1.</span> <span class="nav-text">jdk安装包上传到虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8Bjdk"><span class="nav-number">1.6.2.</span> <span class="nav-text">解压jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">1.6.3.</span> <span class="nav-text">编辑环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E9%80%80%E5%87%BA-%E7%94%9F%E6%95%88%E6%96%87%E4%BB%B6"><span class="nav-number">1.6.4.</span> <span class="nav-text">保存退出 生效文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#docker%E9%95%9C%E5%83%8F%E5%92%8C%E5%AE%B9%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">docker镜像和容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-%E6%A6%82%E6%8B%AC"><span class="nav-number">2.1.</span> <span class="nav-text">docker 概括</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#docker%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.1.1.</span> <span class="nav-text">docker是什么</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E5%AE%89%E8%A3%85%E5%92%8C%E5%90%AF%E5%8A%A8"><span class="nav-number">2.2.</span> <span class="nav-text">docker安装和启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E6%97%A7%E7%89%88%E6%9C%ACdocker"><span class="nav-number">2.2.1.</span> <span class="nav-text">删除旧版本docker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEdocker%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93"><span class="nav-number">2.2.2.</span> <span class="nav-text">配置docker镜像仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85docker%E5%BC%95%E6%93%8E"><span class="nav-number">2.2.3.</span> <span class="nav-text">安装docker引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%BC%95%E6%93%8E"><span class="nav-number">2.2.4.</span> <span class="nav-text">启动引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E5%AE%89%E8%A3%85%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE"><span class="nav-number">2.2.5.</span> <span class="nav-text">检查安装是否正确</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E9%95%9C%E5%83%8F%E5%92%8C%E5%AE%B9%E5%99%A8"><span class="nav-number">2.2.6.</span> <span class="nav-text">docker的核心概念镜像和容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql%E5%AE%B9%E5%99%A8%E5%90%AF%E5%8A%A8"><span class="nav-number">2.2.7.</span> <span class="nav-text">mysql容器启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#docker%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="nav-number">2.2.8.</span> <span class="nav-text">docker的架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.3.</span> <span class="nav-text">docker命令学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.1.</span> <span class="nav-text">镜像命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.2.</span> <span class="nav-text">容器命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%88%91%E9%9C%80%E8%A6%81%E7%9A%84%E5%85%B6%E5%AE%83%E5%AE%B9%E5%99%A8"><span class="nav-number">2.3.3.</span> <span class="nav-text">启动我需要的其它容器</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sanpoi"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Sanpoi</p>
+  <div class="site-description" itemprop="description">人无远虑，必有近忧</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/09/11/Linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Sanpoi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanpoi">
+      <meta itemprop="description" content="人无远虑，必有近忧">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux | Sanpoi">
+      <meta itemprop="description" content="Linux 是一个开源的类 Unix 操作系统内核，最早由芬兰的 Linus Torvalds 在 1991 年开发并发布。它是一个免费和自由的操作系统，被广泛应用于服务器、嵌入式设备、超级计算机等各种领域。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-09-11 19:41:03 / 修改时间：19:51:01" itemprop="dateCreated datePublished" datetime="2023-09-11T19:41:03+08:00">2023-09-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E5%92%8C%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">常用工具和框架</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">Linux 是一个开源的类 Unix 操作系统内核，最早由芬兰的 Linus Torvalds 在 1991 年开发并发布。它是一个免费和自由的操作系统，被广泛应用于服务器、嵌入式设备、超级计算机等各种领域。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Linux学习"><a href="#Linux学习" class="headerlink" title="Linux学习"></a>Linux学习</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>开发过程中所运行的几乎所有软件进程,都要最终在服务器上<strong>部署</strong></p>
+<ul>
+<li>nacos</li>
+<li>rocketmq<ul>
+<li>namesrv</li>
+<li>borker</li>
+</ul>
+</li>
+<li>redis<ul>
+<li>单机</li>
+<li>sentinel哨兵</li>
+<li>cluster集群</li>
+</ul>
+</li>
+<li>mysql<ul>
+<li>单机</li>
+<li>集群</li>
+</ul>
+</li>
+<li>项目jar包<ul>
+<li>java -jar worker.jar -Xms128M –server.port&#x3D;8090</li>
+</ul>
+</li>
+<li>前端<ul>
+<li>配合其它网关 http服务软件 搭建静态页面</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911091550289.png" alt="image-20230911091550289"></p>
+<h2 id="linux系统介绍"><a href="#linux系统介绍" class="headerlink" title="linux系统介绍"></a>linux系统介绍</h2><h2 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h2><h3 id="什么是虚拟机"><a href="#什么是虚拟机" class="headerlink" title="什么是虚拟机"></a>什么是虚拟机</h3><p>Linux，一般指GNU&#x2F;Linux（单独的Linux内核并不可直接使用，一般搭配GNU套件，故得此称呼），是一种免费使用和自由传播的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E7%B1%BBUNIX/9032872?fromModule=lemma_inlink">类UNIX</a>操作系统，其内核由<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%9E%97%E7%BA%B3%E6%96%AF%C2%B7%E6%9C%AC%E7%BA%B3%E7%AC%AC%E5%85%8B%E7%89%B9%C2%B7%E6%89%98%E7%93%A6%E5%85%B9/1034429?fromModule=lemma_inlink">林纳斯·本纳第克特·托瓦兹</a>（Linus Benedict Torvalds）于1991年10月5日首次发布，它主要受到<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Minix/7106045?fromModule=lemma_inlink">Minix</a>和<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Unix/219943?fromModule=lemma_inlink">Unix</a>思想的启发，是一个基于<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/POSIX/3792413?fromModule=lemma_inlink">POSIX</a>的多用户、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%A4%9A%E4%BB%BB%E5%8A%A1/1011764?fromModule=lemma_inlink">多任务</a>、支持<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%A4%9A%E7%BA%BF%E7%A8%8B/1190404?fromModule=lemma_inlink">多线程</a>和多<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/CPU/120556?fromModule=lemma_inlink">CPU</a>的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/192?fromModule=lemma_inlink">操作系统</a>。它支持<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/32%E4%BD%8D/5812218?fromModule=lemma_inlink">32位</a>和<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/64%E4%BD%8D/2262282?fromModule=lemma_inlink">64位</a>硬件，能运行主要的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Unix/219943?fromModule=lemma_inlink">Unix</a>工具软件、应用程序和网络协议。</p>
+<p>Linux继承了Unix以网络为核心的设计思想，是一个性能稳定的多用户网络操作系统。<strong>Linux有上百种不同的发行版</strong>，如基于社区开发的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/debian/748667?fromModule=lemma_inlink">debian</a>、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/archlinux/10857530?fromModule=lemma_inlink">archlinux</a>，和基于商业开发的[Red Hat Enterprise Linux](<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Red">https://baike.baidu.com/item/Red</a> Hat Enterprise Linux&#x2F;10770503?fromModule&#x3D;lemma_inlink)、<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/SUSE/60409?fromModule=lemma_inlink">SUSE</a>、[Oracle Linux](<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Oracle">https://baike.baidu.com/item/Oracle</a> Linux&#x2F;6876458?fromModule&#x3D;lemma_inlink)等。</p>
+<p>版本不同差别还是非常大的.</p>
+<p>rehat centos&#x3D;rockeyList(一个作者) ubantu Debian Fedora 等等.</p>
+<p>在开发岗位使用的linux没有图形界面的,虽然Linux很多版本支持图形界面的.但是不要以windows使用习惯,操作和理解linux.</p>
+<h3 id="虚拟机网络"><a href="#虚拟机网络" class="headerlink" title="虚拟机网络"></a>虚拟机网络</h3><p>虚拟机是一个可以在已有的物理机上的操作系统中,创建独立隔离的一个单独操作系统的虚拟化软件.</p>
+<p>虚拟机的概念和结构</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911093310492.png" alt="image-20230911093310492"></p>
+<p>如果想要通过宿主机 寻找管理使用虚拟机系统中的文件和软件.</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911093548657.png" alt="image-20230911093548657"></p>
+<p>所有的操作系统想要对外访问,允许外部连接,都需要通过网络(ip地址).</p>
+<p>一定要通过网卡来连接.</p>
+<p>虚拟机也有网卡-虚拟网卡</p>
+<p>真实物理机网卡</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911095013469.png" alt="image-20230911095013469"></p>
+<h3 id="客户端连接"><a href="#客户端连接" class="headerlink" title="客户端连接"></a>客户端连接</h3><p>finalShell 作为开发工程师,运维工程师操作远程服务器的客户端,建立安全的网络连接.</p>
+<h2 id="Linux系统基础命令"><a href="#Linux系统基础命令" class="headerlink" title="Linux系统基础命令"></a>Linux系统基础命令</h2><h3 id="命令提示符"><a href="#命令提示符" class="headerlink" title="命令提示符"></a>命令提示符</h3><p>登录进入linux直接看到的提示符行</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911095211876.png" alt="image-20230911095211876" style="zoom:50%;" />
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;当前登录用户&#125;@&#123;当前主机名&#125; &#123;当前命令提示符所在文件夹名称&#125;]#</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当前用户: root最高级别权限的用户,这个平时开发时不可能拿得到.都会给不同的开发者使用不同权限账号 比如 zhangsan lisi</li>
+</ul>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[zhangsan@rockylinux8 home]$</span><br></pre></td></tr></table></figure>
+
+<p>除了最高权限用户root的后缀是# 其它用户全部都是$符号.</p>
+<p>可以通过账号密码进行用户的切换</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su 用户名</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试切换</strong></p>
+<ol>
+<li>添加一个用户</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd xiaolaoshi</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在root切换到新用户</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su xiaolaoshi</span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911101756607.png" alt="image-20230911101756607" style="zoom:50%;" />
+
+<ol start="3">
+<li>从当前用户退出</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>从新用户su到root用户,需要输入密码</li>
+</ol>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911102113629.png" alt="image-20230911102113629" style="zoom:50%;" />
+
+<p><strong>主机名</strong></p>
+<p>直接输入命令可以查看主机名</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname</span><br></pre></td></tr></table></figure>
+
+<p>如果命令后面添加一个参数 相当于临时修改主机名</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname jsd2304</span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911102353291.png" alt="image-20230911102353291" style="zoom:50%;" />
+
+<p><strong>当前文件夹</strong></p>
+<p>~ 表示当前用户的家目录 ${USER.HOME}</p>
+<p>所以同时是在&#x2F;root目录下,root用户看到~ xiaolaoshi新用户看到 root</p>
+<p>新用户创建之后,家目录总是在**&#x2F;home&#x2F;{用户名称}**</p>
+<p><strong>权限标识符号</strong></p>
+<p>$ 表示普通权限</p>
+<p># 表示最高权限</p>
+<h3 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h3><ul>
+<li><strong>演示一些命令</strong></li>
+</ul>
+<p>在linux系统中,存在非常多的使用命令.命令格式比较统一</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;主命令&#125; [选项] [参数]</span><br></pre></td></tr></table></figure>
+
+<p>例如: 有的命令只有主命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwd</span><br></pre></td></tr></table></figure>
+
+<p>查看当前所在的路径全路径名称</p>
+<p>linux中没有盘符的概念.所以所有地址和所有文件都是以”&#x2F;“开始的绝对路径</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -a</span><br></pre></td></tr></table></figure>
+
+<p>检查当前所在目录中所有的内容. ls&#x3D;list展示列表.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911103608735.png" alt="image-20230911103608735" style="zoom:50%;" />
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -a /home</span><br></pre></td></tr></table></figure>
+
+<p>表示查看&#x2F;home这个目录下的所有文件内容.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911103655615.png" alt="image-20230911103655615" style="zoom:50%;" />
+
+<ul>
+<li>命令帮助</li>
+</ul>
+<p>绝大部分密令使用的时候 都存在帮助菜单.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;命令&#125; --help</span><br></pre></td></tr></table></figure>
+
+<p>展示命令的用法Usage,和命令的所有选项以及选项解释.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls --help</span><br></pre></td></tr></table></figure>
+
+<p>对于基础命令的学习,更建议使用现成的书,比在系统中使用–help来的更直接,学习更全面和系统.</p>
+<h3 id="cd-指令"><a href="#cd-指令" class="headerlink" title="cd 指令"></a>cd 指令</h3><p>cd更改当前工作所在的目录,从当前目录 转向目标目录中.</p>
+<p>所以如果想要随心所欲的修改目录,跳转,需要对linux的目录结构有最基本的认识.</p>
+<p>例如:</p>
+<p>&#x2F; 下有哪些常用的目录</p>
+<ul>
+<li>home: 用户家目录的上级目录,所有创建的新用户都在这里出现家目录</li>
+<li>root: root账号的家目录</li>
+<li>etc: 环境目录 比如环境变量,一些环境配置文件,网络网卡</li>
+<li>usr: 工作用户目录,包含不同用户的环境配置命令</li>
+<li>var: 变量目录,有一些软件安装默认配置就在这里,下载,docker容器,数据卷</li>
+<li>sbin&#x2F;bin目录: 系统命令所在的文件夹,命令文件脚本</li>
+</ul>
+<ol>
+<li><strong>相对路径和绝对路径</strong></li>
+</ol>
+<p>在使用linux系统的时候,无论去寻找 ,使用,指定 <strong>文件或者文件夹</strong>,有两种编写路径的方式. <strong>相对路径(相对于当前工作路径) 绝对路径(一切都是从&#x2F;开始的)</strong></p>
+<p>例如: 使用ls命令 查看home文件夹的东西</p>
+<p><strong>相对路径</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls ../home</span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911104909518.png" alt="image-20230911104909518" style="zoom:50%;" />
+
+<p>由于当前工作路径在root下,所以 相对路径找到home 需要向上一级目录 ..&#x2F; 在加上home才能看到</p>
+<p><strong>绝对路径</strong></p>
+<p>所有的文件或者文件夹的绝对路径一定是 &#x2F;开始的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /home</span><br></pre></td></tr></table></figure>
+
+<p>由于使用绝对路径,所以无论当前工作空间在哪里,都不影响执行js展示&#x2F;home内容的命令结果.</p>
+<p>所以一下的cd命令哪个使用的相对路径 哪个是使用的绝对路径,含义是什么</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /home</span><br><span class="line">cd ../../../home</span><br><span class="line">cd /home/soft</span><br></pre></td></tr></table></figure>
+
+<p>补充上述cd命令的描述含义:</p>
+<ol>
+<li><p>绝对路径 直接寻找 &#x2F;home目录</p>
+</li>
+<li><p>相对路径,相对于当前文件夹 向上三级 向下寻找home</p>
+</li>
+<li><p>绝对路径 直接寻找&#x2F;home&#x2F;soft目录</p>
+</li>
+</ol>
+<h3 id="ls指令"><a href="#ls指令" class="headerlink" title="ls指令"></a>ls指令</h3><p><strong>作用</strong>:展示文件夹中的内容的指令,或者展示某个 某几个文件的内容.</p>
+<p><strong>常见选项</strong>:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-a: 展示目标文件夹下,所有文件内容,目录内容,linux系统中,文件和文件夹的名字带.开始的,都是隐藏的.</span><br><span class="line">-l: 以详情展示</span><br><span class="line">-R: (不要轻易使用) 递归的查看</span><br><span class="line">可以通过参数指定查看的文件夹.展示一个树</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls -a</span><br><span class="line">ls -a /home</span><br><span class="line">ls -a /home/helloWorker.txt</span><br></pre></td></tr></table></figure>
+
+<p>参数类型不同 第一个没有参数 默认当前目录</p>
+<p>第二个有参数 &#x2F;home目录</p>
+<p>第三个有参数&#x2F;home目录下的一个helloWorker.txt文件</p>
+<p>多个选项 如果没有意义上的冲突可以同时使用的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -al</span><br></pre></td></tr></table></figure>
+
+<p>参数可以添加范围匹配.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls *.jar</span><br></pre></td></tr></table></figure>
+
+<p>是在当前目录中,查询所有以.jar结尾的文件.</p>
+<h3 id="mkdir指令"><a href="#mkdir指令" class="headerlink" title="mkdir指令"></a>mkdir指令</h3><p><strong>作用:</strong> 创建目录</p>
+<p><strong>常用选项</strong>:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-p: 允许创建多级目录,不添加不允许创建.</span><br></pre></td></tr></table></figure>
+
+<p><strong>重点</strong>: 相对路径还是绝对路径的创建</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/haha</span><br><span class="line">mkdir kaka</span><br><span class="line">mkdir -p /home/a/b/c/d/e</span><br></pre></td></tr></table></figure>
+
+<p>如果创建的是空文件夹,并且不需要了,可以使用命令删除</p>
+<p><strong>rmdir</strong>: 只能删除空文件夹</p>
+<h3 id="touch指令"><a href="#touch指令" class="headerlink" title="touch指令"></a>touch指令</h3><p>创建一个或多个空文件.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch text01.txt text02.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="cp指令"><a href="#cp指令" class="headerlink" title="cp指令"></a>cp指令</h3><p><strong>作用:</strong> 拷贝文件夹或者文件到指定文件或指定目录中</p>
+<p><strong>用法:</strong></p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp [选项] source dest</span><br></pre></td></tr></table></figure>
+
+<p><strong>选项</strong>:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-r 递归赋值,如果没有-r 最多只能复制一个文件,无法赋值有文件的文件夹</span><br></pre></td></tr></table></figure>
+
+<p><strong>排列组合</strong></p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cp 文件 目录 : 将文件拷贝到目录</span><br><span class="line">cp 文件 不存在的一个名字: 将文件拷贝成这个新名字的文件</span><br><span class="line">cp -r 文件夹 目录: 将空文件夹拷贝到目录下</span><br><span class="line">cp -r 文件夹 不存在的一个名字: 文件夹会拷贝成新名字的文件夹</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911114300962.png" alt="image-20230911114300962"></p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911114311818.png" alt="image-20230911114311818"></p>
+<p>在root文件夹下会出现4个新内容 2个新文件 2个新目录</p>
+<p>&#x2F;root&#x2F;text01.txt</p>
+<p>&#x2F;root&#x2F;text.txt</p>
+<p>&#x2F;root&#x2F;cptest</p>
+<p>&#x2F;root&#x2F;hahatest</p>
+<h3 id="mv指令"><a href="#mv指令" class="headerlink" title="mv指令"></a>mv指令</h3><p><strong>作用</strong>: 移动 剪切</p>
+<p><strong>用法</strong>: </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv [选项] source dest</span><br></pre></td></tr></table></figure>
+
+<p>所有的内容和cp差不多,</p>
+<p>区别之一是,cp的source不会消失,但是mv的会消失.</p>
+<p>区别之二是,mv可以支持移动文件夹,无论有没有下级文件.</p>
+<h3 id="cat指令"><a href="#cat指令" class="headerlink" title="cat指令"></a>cat指令</h3><p><strong>作用</strong>: 查看文本文件的</p>
+<p><strong>用法</strong>: </p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat &#123;文件名称&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="tail指令"><a href="#tail指令" class="headerlink" title="tail指令"></a>tail指令</h3><p>和cat类似,只能展示查看尾部内容(有一些日志文件,只需要看尾部)</p>
+<p><strong>作用</strong>: 查看文件尾部</p>
+<p><strong>用法</strong>:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail [选项] &#123;文件名称&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong>:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-f: 动态查看尾部输出的内容,否则就是静态查看</span><br><span class="line">-n: 指定一共查看尾部多少行 默认是10行</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail -n 20 /home/docs/sql/bibilili.sql</span><br></pre></td></tr></table></figure>
+
+<h3 id="tar指令"><a href="#tar指令" class="headerlink" title="tar指令"></a>tar指令</h3><p>针对tar类型的包,进行打包和解包的操作的.</p>
+<p>使用这个命令进行一个解包操作.</p>
+<ul>
+<li>准备一个可以进行解包操作的文件</li>
+</ul>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911115810475.png" alt="image-20230911115810475" style="zoom:50%;" />
+
+<p>&#x2F;home&#x2F;resources&#x2F;mysql-connector-java-8.0.26.tar.gz</p>
+<ul>
+<li>上传到服务器apache-mave-3.8.8.tar.gz</li>
+</ul>
+<p>从笔记资料中拿到这个练习的tar包.</p>
+<p>在finalshell中使用工具上传.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911120250517.png" alt="image-20230911120250517" style="zoom:50%;" />
+
+<p>点击右上上传按钮</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911120342618.png" alt="image-20230911120342618" style="zoom:50%;" />
+
+<p>利用上述基础命令,检查是否上传成功.</p>
+<h4 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h4><p><strong>作用</strong>: 将tar压缩包解压到文件夹</p>
+<p><strong>用法</strong>:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xf &#123;tar包&#125; -C &#123;解压目录&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不添加-C 默认解压到当前执行tar命令的所在目录</p>
+<p>-x 表示解压</p>
+<p>-f 表示对应文件</p>
+<h4 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h4><p><strong>作用</strong>: 将文件夹打包到压缩包</p>
+<p><strong>用法</strong>:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -cf &#123;tar包&#125; &#123;压缩目录&#125;</span><br></pre></td></tr></table></figure>
+
+<p>-c: 压缩一个文件夹到tar包</p>
+<p>-f: 对应的压缩文件</p>
+<h3 id="wget指令"><a href="#wget指令" class="headerlink" title="wget指令"></a>wget指令</h3><p>作用: 直接将下载资源下载的当前linux系统</p>
+<p>用法:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget &#123;资源地址&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以redis下载为例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://download.redis.io/redis-stable.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>按照redis官方文档 进行redis源码安装.</p>
+<h2 id="vim文本编辑器"><a href="#vim文本编辑器" class="headerlink" title="vim文本编辑器"></a>vim文本编辑器</h2><p>linux 操作和使用 绝离不开文本的编辑功能.</p>
+<p>在linux中有2种文本编辑器 vi vim 后者是升级版,相对来讲vi 足够使用了 vim多了一些功能,让编辑更方便.</p>
+<h3 id="vim的三种状态"><a href="#vim的三种状态" class="headerlink" title="vim的三种状态"></a>vim的三种状态</h3><p>当使用vim编辑一个文档的时候,使用vim命令打开文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#123;文件名&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要了解vim打开编辑的三种状态</p>
+<ul>
+<li>一般模式:</li>
+<li>编辑模式:</li>
+<li>命令模式:</li>
+</ul>
+<h3 id="一般模式"><a href="#一般模式" class="headerlink" title="一般模式"></a>一般模式</h3><p>每次使用vim打开一个存在的或者不存在的文件,就会进入vim的一般模式.</p>
+<p>在一般模式下,不支持直接编辑.支持操作vim的快捷键.</p>
+<ul>
+<li>dd: 剪切一行到剪切板</li>
+<li>[n]dd: 从光标所在行向下剪切n行到剪切板</li>
+<li>yy: 复制贯标一行到剪切板 和dd的区别就是不会造成原文本的消失</li>
+<li>[n]yy: 从光标所在的行向下赋值n行到剪切板</li>
+<li>u: 回退到上一步</li>
+<li>p: 粘贴当前剪切板内容都当前光标所在下一行</li>
+</ul>
+<h3 id="编辑模式"><a href="#编辑模式" class="headerlink" title="编辑模式"></a>编辑模式</h3><p>从一般模式可以进入到编辑模式,一旦进入编辑模式,可以在文本中实现任意字符内容的编写了.</p>
+<p>一般模式和编辑模式可以相互切换</p>
+<p><strong>一般模式</strong>–&gt;<strong>编辑模式</strong>,直接输入快捷键</p>
+<ul>
+<li><p>a:当前光标向后一个</p>
+</li>
+<li><p>A:当前光标调到行末尾</p>
+</li>
+<li><p><strong>i</strong>: 光标位置不变</p>
+</li>
+<li><p>I: 和A相反 调到当前行第一个</p>
+</li>
+<li><p><strong>o</strong>: 向下一行 并且带有回车</p>
+</li>
+<li><p>O: 和o相反,在当前光标所在的上一行 换行回车</p>
+</li>
+</ul>
+<p>替换编辑</p>
+<ul>
+<li><p>r: 点击一次r 替换光标所在的文字一次(替换文件中端口号)</p>
+</li>
+<li><p>R: 点击一次R 直到ESC键退出编辑,一直替换</p>
+</li>
+</ul>
+<p><strong>编辑模式–&gt;一般模式 输入ESC退出</strong></p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911143552542.png" alt="image-20230911143552542" style="zoom:50%;" />
+
+<h3 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h3><p>可以在vim编辑器里对文本内容编辑完成之后,之前做一些命令操作,实现功能.</p>
+<p>比如 不保存 退出 保存 保存完退出 查看当前文件行数 另存为</p>
+<p>进入命令模式的方式: 一般模式下直接输入? : &#x2F; 表示要输入的命令</p>
+<p><strong>一般模式–&gt;命令模式</strong></p>
+<p>一般模式下直接输入? : &#x2F;</p>
+<p>命令:</p>
+<p>:w 保存</p>
+<p>:q 退出</p>
+<p>:wq 保存退出</p>
+<p>:q! 编辑后不保存退出</p>
+<p>&#x2F;{文本} 搜索</p>
+<p>:%s&#x2F;{原文}&#x2F;{替换后文本}&#x2F;g</p>
+<p>:w {新的文件名称}</p>
+<p><strong>命令模式–&gt;一般模式</strong></p>
+<p>输入的命令内容直接全部删除,就回退到了一般模式</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911144747268.png" alt="image-20230911144747268"></p>
+<h2 id="安装配置一下linux系统的环境变量java"><a href="#安装配置一下linux系统的环境变量java" class="headerlink" title="安装配置一下linux系统的环境变量java"></a>安装配置一下linux系统的环境变量java</h2><p>在linux系统可以利用上述学习的一些技能或者命令,配置一个java环境.</p>
+<p>只需要在环境变量Path中指定java中jdk的bin文件夹就可以了.</p>
+<h3 id="jdk安装包上传到虚拟机"><a href="#jdk安装包上传到虚拟机" class="headerlink" title="jdk安装包上传到虚拟机"></a>jdk安装包上传到虚拟机</h3><ul>
+<li>参考上面maven上传</li>
+<li>上传文件位置确定</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911145257022.png" alt="image-20230911145257022"></p>
+<h3 id="解压jdk"><a href="#解压jdk" class="headerlink" title="解压jdk"></a>解压jdk</h3><p>使用tar命令找到这个tar包进行解压</p>
+<p>将其解压到&#x2F;home&#x2F;software&#x2F;jdk1.8</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xf jdk-8u65-linux-x64.tar.gz -C /home/software/</span><br><span class="line">mv /home/software/&#123;jdk文件夹&#125; /home/software/jdk1.8</span><br></pre></td></tr></table></figure>
+
+<h3 id="编辑环境变量"><a href="#编辑环境变量" class="headerlink" title="编辑环境变量"></a>编辑环境变量</h3><p>使用vim编辑器 编辑&#x2F;etc&#x2F;profile 是给当前登录用户临时生效的环境变量配置文件</p>
+<p>Path变量中添加一个 &#x2F;home&#x2F;software&#x2F;jdk1.8&#x2F;bin 就能生效当前解压的java环境</p>
+<p>在文件中添加如下内容</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">JAVA_HOME=/home/software/jdk1.8</span><br><span class="line">PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line">export JAVA_HOME PATH</span><br></pre></td></tr></table></figure>
+
+<p>{环境变量}&#x3D;{值}</p>
+<p>{环境变量}&#x3D;${环境变量}</p>
+<p>{环境变量}&#x3D;{值1}:{值2}</p>
+<h3 id="保存退出-生效文件"><a href="#保存退出-生效文件" class="headerlink" title="保存退出 生效文件"></a>保存退出 生效文件</h3><p>在编辑模式 按ESC</p>
+<p>在一般模式 输入 :wq</p>
+<p>在命令提示符中输入命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>最后输入命令 确定当前环境中有我们添加的环境变量内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911152424313.png" alt="image-20230911152424313"></p>
+<h1 id="docker镜像和容器"><a href="#docker镜像和容器" class="headerlink" title="docker镜像和容器"></a>docker镜像和容器</h1><p>目的:</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 了解docker是什么</li>
+<li><input checked="" disabled="" type="checkbox"> 理解docker 镜像和容器的关系</li>
+<li><input checked="" disabled="" type="checkbox"> 掌握学习讲解的docker基础命令</li>
+<li><input checked="" disabled="" type="checkbox"> 掌握使用docker快速搭建一个mysql容器</li>
+</ul>
+<h2 id="docker-概括"><a href="#docker-概括" class="headerlink" title="docker 概括"></a>docker 概括</h2><h3 id="docker是什么"><a href="#docker是什么" class="headerlink" title="docker是什么"></a>docker是什么</h3><p>docker官网: <a target="_blank" rel="noopener" href="https://www.docker.com/">https://www.docker.com</a></p>
+<p>docker官方镜像网站: <a target="_blank" rel="noopener" href="https://hub.docker.com/;https://hub-stage.docker.com">https://hub.docker.com/;https://hub-stage.docker.com</a></p>
+<p>虚拟化的<strong>容器</strong>技术(vm workstation oracle Virtualbox相同的).可以在宿主机创建大量独立隔离的操作系统,运行不同软件.</p>
+<p>通过镜像可以将大量的安装好的,配置好环境的系统内容进行保存,然后通过进行可以快速的启动大量容器,实现快速搭建.</p>
+<p>应用场景:</p>
+<p>例如: 购物节,或者各种网站活动时,活动期间,企业会大量创建容器,应对高并发. 一个容器就可以理解为一个软件运行在一个服务器.</p>
+<p>几秒钟之内 立刻启动上万个容器,运行上万个tomcat进程.</p>
+<h2 id="docker安装和启动"><a href="#docker安装和启动" class="headerlink" title="docker安装和启动"></a>docker安装和启动</h2><p>主要针对rockyLinux系统做安装和启动.(下发的OVA导入的virtualbox 不需要安装);</p>
+<h3 id="删除旧版本docker"><a href="#删除旧版本docker" class="headerlink" title="删除旧版本docker"></a>删除旧版本docker</h3><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置docker镜像仓库"><a href="#配置docker镜像仓库" class="headerlink" title="配置docker镜像仓库"></a>配置docker镜像仓库</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils</span><br><span class="line">yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装docker引擎"><a href="#安装docker引擎" class="headerlink" title="安装docker引擎"></a>安装docker引擎</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动引擎"><a href="#启动引擎" class="headerlink" title="启动引擎"></a>启动引擎</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="检查安装是否正确"><a href="#检查安装是否正确" class="headerlink" title="检查安装是否正确"></a>检查安装是否正确</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+
+<p>这个命令在有网络连接,前面docker镜像仓库配置是正确的情况下,可以看到一个有效的结果.</p>
+<h3 id="docker的核心概念镜像和容器"><a href="#docker的核心概念镜像和容器" class="headerlink" title="docker的核心概念镜像和容器"></a>docker的核心概念镜像和容器</h3><h3 id="mysql容器启动"><a href="#mysql容器启动" class="headerlink" title="mysql容器启动"></a>mysql容器启动</h3><p>docker能够快速启动和搭建环境.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mysql01 -e MYSQL_ROOT_PASSWORD=123456 -d  -p 3310:3306 mysql</span><br></pre></td></tr></table></figure>
+
+<p>这个命令启动运行成功后,立刻在系统中会出现一个可以帮助我们完成mysql数据库功能的docker容器进程,外界可以使用数据库的客户端连接这个容器.和单独启动搭建安装一个mysql的软件没有任何区别.</p>
+<h3 id="docker的架构"><a href="#docker的架构" class="headerlink" title="docker的架构"></a>docker的架构</h3><ul>
+<li>宿主机: docker引擎所在的系统 就是宿主机(当前宿主机就是virtual box里的rockyLinux)</li>
+<li>镜像: 本质是一批文件,文件保存了一个系统的环境所有内容.例如,工程师将环境安装好,软件搭建好,可以生成镜像文件images,可以复制传递.里面包含的就是一个完整系统所有环境信息.</li>
+<li>镜像仓库: 同一个软件,同一个镜像,具有很多不同的版本,这时候,将镜像名字称为镜像仓库名称,不同的版本称为镜像仓库的tag标签,由这些镜像组成的一个海量的文件库,就是镜像仓库.一般是保存在远程服务器的.</li>
+<li>镜像仓库服务器: 保存海量镜像仓库的服务器.<ul>
+<li>公开的镜像仓库服务器: hub.docker.com</li>
+<li>私有的镜像仓库服务器: 各公司自己搭建</li>
+</ul>
+</li>
+<li>容器: 基于某个镜像,docker启动的一个进程,这个进程里面,包含镜像所有内容的一个独立的系统.</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911160234400.png" alt="image-20230911160234400"></p>
+<h2 id="docker命令学习"><a href="#docker命令学习" class="headerlink" title="docker命令学习"></a>docker命令学习</h2><h3 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h3><ul>
+<li>docker命令的结构</li>
+</ul>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker &#123;子命令&#125; [选项] [参数]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>docker images</li>
+</ul>
+<p>主要用来查看当前本地镜像有哪些;</p>
+<p><img src="D:\IDEA\IdeaProjects\jsd2304-notes\notes\DAY22\images\image-20230911163132406.png" alt="image-20230911163132406"></p>
+<p>REPOSITORY: 镜像仓库名称</p>
+<p>TAG: 标签一般是版本号 如果是latest对应的是当前仓库最新的版本</p>
+<p>IMAGE ID: 镜像的ID</p>
+<p>CREATED: 创建时间</p>
+<p>SIZE: 大小</p>
+<p>可用的选项 </p>
+<p>-a: 展示所有镜像信息 </p>
+<p>-q: 只显示镜像id(<strong>可以作为一个内嵌的命令给外面包裹的命令传递参数</strong>)</p>
+<ul>
+<li>docker search</li>
+</ul>
+<p>我们需要的镜像可以在docker的仓库里进行搜索，也可以使用docker search命令进行搜索。例如需要启动nacos-server进程镜像.</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911163705215.png" alt="image-20230911163705215"></p>
+<p>NAME: 镜像仓库名称</p>
+<p>DESCRIPTION: 描述</p>
+<p>STARS: 星级 星级越高,热度和受欢迎度越高.</p>
+<p>OFFICIAL: [OK] 说明是官方镜像,如果没有就不是官方</p>
+<p>AUTOMATED: 自动化 是否支持.</p>
+<p>如果想要更清楚的知道如何使用这个镜像,最好到官方仓库查看.</p>
+<p>一般官方镜像都会提供运行命令.</p>
+<ul>
+<li>docker pull</li>
+</ul>
+<p>当我们需要用到某个镜像的时候，可以利用pull命令将镜像从远程仓库下载到本地。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull &#123;仓库名&#125;:&#123;tag&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/linux.png" style="zoom:50%;" />
+
+<p>一个镜像的tag的值可以是默认的,如果不给,就是latest</p>
+<ul>
+<li>docker rmi</li>
+</ul>
+<p>当下载的镜像越来越多，不需要用到镜像时，可以执行rmi删除镜像命令。</p>
+<p>命令后面可以添加镜像的id值 可以添加多个</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi id1 id2 id3</span><br></pre></td></tr></table></figure>
+
+<p>如果想要将当前宿主机中的镜像清空.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi $(docker images -aq)</span><br></pre></td></tr></table></figure>
+
+<p>这是一个docker支持的内部嵌套的执行 将$()中的命令执行的返回结果当做外部命令的参数使用.</p>
+<p>如果直接删除,某些镜像在绑定容器使用,导致镜像无法删除掉,可以添加选项</p>
+<p>-f 强制删除.</p>
+<h3 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h3><p>我们可以利用下载好的镜像,启动各种各样要求 配置 参数的容器.</p>
+<ul>
+<li>docker run</li>
+</ul>
+<p>我们可以利用docker run的命令使用我们下载好的镜像，来创建和启动容器。前面我们介绍过，镜像好似模具，而容器就是利用这模具创建的实例。一个镜像可以创建运行多个容器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name abcd -e JAVA_HOME=/home/abc -p 8000:3306 mysql</span><br></pre></td></tr></table></figure>
+
+<p>-d : 容器启动后 在后台运行,如果不添加这个选项,运行和启动的容器 就会直接进入容器.直到容器停止,或者手动退出.</p>
+<p>–name: 给容器启动时,添加一个容器名称,容器不能重名</p>
+<p>-e: 给容器启动的时候,容器内部的环境变量 提供你想要指定变量名</p>
+<p>-p: 指定绑定宿主机端口的选项.可以通过多次使用-p绑定多个端口</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-p &#123;宿主机端口&#125;:&#123;容器内部系统端口&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>docker ps</li>
+</ul>
+<p>当容器启动后，我们在宿主机可以通过ps命令查看容器相关的信息。</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230911170900287.png" alt="image-20230911170900287"></p>
+<p>CONTAINER ID: 容器id 全部id没有展示只展示前12位</p>
+<p>IMAGE: 启动容器镜像仓库名称</p>
+<p>COMMAND: 容器内部正在运行的脚本,正在运行的一个进程</p>
+<p>CREATED: 创建时间</p>
+<p>STATUS: 容器运行状态 目前都是Up 还有Exited</p>
+<p>PORTS: 绑定端口信息</p>
+<p>NAMES: 容器名称</p>
+<p>查询docker ps的选项</p>
+<p>-a: 显示所有容器,如果不添加,显示的容器只是运行Up状态的.</p>
+<p>-l: 显示最近启动或者创建的容器</p>
+<p>-n&#x3D;{数字}: 显示自定义个数容器</p>
+<p>-q: 只显示容器的id</p>
+<ul>
+<li>docker rm</li>
+</ul>
+<p>使用镜像创建的容器，可以使用rm进行删除。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm &#123;容器id&#125; &#123;容器id&#125; &#123;容器id&#125;</span><br></pre></td></tr></table></figure>
+
+<p>删除所有容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm -f $(docker ps -aq)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name abc -e MYSQL_ROOT_PASSWORD=123456 -d -p 3399:3306 mysql</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动我需要的其它容器"><a href="#启动我需要的其它容器" class="headerlink" title="启动我需要的其它容器"></a>启动我需要的其它容器</h3><p>目标: 启动一个可以被外界访问的nacos服务端</p>
+<p>hub.docker.com 搜索nacos&#x2F;nacos-server里面也会有和mysql一样的描述</p>
+<p>包括redis</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/26/ThreadLocal/" rel="prev" title="ThreadLocal">
+                  <i class="fa fa-angle-left"></i> ThreadLocal
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/11/29/Test/" rel="next" title="Test">
+                  Test <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sanpoi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:51</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

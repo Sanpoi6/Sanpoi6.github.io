@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Elasticsearch是一个开源的分布式搜索和分析引擎，基于Lucene库构建而成。它提供了一个快速、可扩展、实时的全文搜索和分析功能，并支持大规模数据的存储、检索和分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/08/20/Elasticsearch/index.html">
+<meta property="og:site_name" content="Sanpoi">
+<meta property="og:description" content="Elasticsearch是一个开源的分布式搜索和分析引擎，基于Lucene库构建而成。它提供了一个快速、可扩展、实时的全文搜索和分析功能，并支持大规模数据的存储、检索和分析。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103020943.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103215524.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103356288.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103913516.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810104355105.png">
+<meta property="og:image" content="d:\IDEA\IdeaProjects\jsd2304-tmall-server-teacher\doc\note\images\image-20230810104550441.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810113711741.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810114606110.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810114744905.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810140842583.png">
+<meta property="article:published_time" content="2023-08-20T06:57:49.000Z">
+<meta property="article:modified_time" content="2023-08-20T07:04:42.710Z">
+<meta property="article:author" content="Sanpoi">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103020943.png">
+
+
+<link rel="canonical" href="https://sanpoi6.github.io/2023/08/20/Elasticsearch/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/20/Elasticsearch/","path":"2023/08/20/Elasticsearch/","title":"Elasticsearch"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Elasticsearch | Sanpoi</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sanpoi</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">东隅已逝，桑榆非晚</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EElasticsearch"><span class="nav-number">1.</span> <span class="nav-text">关于Elasticsearch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8elasticsearch%E5%88%86%E8%AF%8D"><span class="nav-number">2.</span> <span class="nav-text">使用elasticsearch分词</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch%E6%96%87%E6%A1%A3%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">Elasticsearch文档数据库的相关概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8ERESTful%E8%AE%BF%E9%97%AEElasticsearch"><span class="nav-number">4.</span> <span class="nav-text">基于RESTful访问Elasticsearch</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%B1%87%E6%80%BB"><span class="nav-number">4.1.</span> <span class="nav-text">操作汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%87%E6%A1%A3"><span class="nav-number">4.2.</span> <span class="nav-text">添加文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-number">4.3.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E6%A1%A3"><span class="nav-number">4.4.</span> <span class="nav-text">修改文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E6%A1%A3"><span class="nav-number">4.5.</span> <span class="nav-text">查看文档</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Elasticsearch%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">5.</span> <span class="nav-text">Elasticsearch中的数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%9C%E7%B4%A2"><span class="nav-number">6.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8ESpring-Boot%E7%9A%84Elasticsearch%E7%BC%96%E7%A8%8B"><span class="nav-number">7.</span> <span class="nav-text">基于Spring Boot的Elasticsearch编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="nav-number">7.1.</span> <span class="nav-text">添加依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%96%87%E6%A1%A3%E6%95%B0%E6%8D%AE%E7%9A%84Java%E7%B1%BB"><span class="nav-number">7.2.</span> <span class="nav-text">定义文档数据的Java类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE%E6%8E%A5%E5%8F%A3"><span class="nav-number">7.3.</span> <span class="nav-text">编写数据访问接口</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sanpoi"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Sanpoi</p>
+  <div class="site-description" itemprop="description">人无远虑，必有近忧</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/20/Elasticsearch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Sanpoi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanpoi">
+      <meta itemprop="description" content="人无远虑，必有近忧">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Elasticsearch | Sanpoi">
+      <meta itemprop="description" content="Elasticsearch是一个开源的分布式搜索和分析引擎，基于Lucene库构建而成。它提供了一个快速、可扩展、实时的全文搜索和分析功能，并支持大规模数据的存储、检索和分析。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Elasticsearch
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-08-20 14:57:49 / 修改时间：15:04:42" itemprop="dateCreated datePublished" datetime="2023-08-20T14:57:49+08:00">2023-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3/" itemprop="url" rel="index"><span itemprop="name">数据库相关</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>13k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">Elasticsearch是一个开源的分布式搜索和分析引擎，基于Lucene库构建而成。它提供了一个快速、可扩展、实时的全文搜索和分析功能，并支持大规模数据的存储、检索和分析。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="关于Elasticsearch"><a href="#关于Elasticsearch" class="headerlink" title="关于Elasticsearch"></a>关于Elasticsearch</h1><p>Elaticsearch是专门用于解决搜索问题的NoSQL的文档数据库。</p>
+<p>无论使用哪种操作系统，只需要下载elasticsearch的压缩包并解压即可使用，需要注意，elasticsearch文件夹的各层级的父级文件夹的名称中不允许包含非ASCII码字符和空格！例如放在D盘根目录下：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103020943.png" alt="image-20230810103020943"></p>
+<p>执行<code>bin</code>目录下的<code>elasticsearch</code>即可启用Elasticsearch服务：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103215524.png" alt="image-20230810103215524"></p>
+<p>启动成功后，效果大致如下：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103356288.png" alt="image-20230810103356288"></p>
+<p><strong>注意：</strong>在使用Elasticsearch的过程中，以上窗口不可关闭！</p>
+<p>当启动成功后，你可以通过浏览器访问 <a href="http://localhost:9200，页面显示内容如下：">http://localhost:9200，页面显示内容如下：</a></p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810103913516.png" alt="image-20230810103913516"></p>
+<p>elasticsearch提供了一套基于RESTful的访问，你可以使用任何一种可以提交REST请求的工具来访问elasticsearch及其中的数据，例如常见的测试工具PostMan等。</p>
+<p>或者，你也可以在IntelliJ IDEA中，使用HTTP Request进行访问：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810104355105.png" alt="image-20230810104355105"></p>
+<p>在HTTP Request文件中编写需要提交的请求，然后，点击左侧的运行图标即可发起请求</p>
+<p><img src="D:\IDEA\IdeaProjects\jsd2304-tmall-server-teacher\doc\note\images\image-20230810104550441.png" alt="image-20230810104550441"></p>
+<h1 id="使用elasticsearch分词"><a href="#使用elasticsearch分词" class="headerlink" title="使用elasticsearch分词"></a>使用elasticsearch分词</h1><p>Elasticsearch之所以能够高效处理搜索，是因为它会将你的数据进行“分词”处理，即将一段文本拆成若干个文本，在执行搜索时，会尝试检查是否匹配“拆”出来的某个文本。</p>
+<p>向 <a target="_blank" rel="noopener" href="http://localhost:9200/_analyze">http://localhost:9200/_analyze</a> 提交请求即可分词，并且，请求中必须包含请求参数，参数名称固定为<code>text</code>，整个请求的格式大致如下：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810113711741.png" alt="image-20230810113711741"></p>
+<p>提示：在同一个<code>.http</code>文件中，可以编写多个请求，但是，后续的请求的代码必须使用 <code>###</code> 和前序的请求分开，不能只使用1个 <code>#</code>！</p>
+<p>你也可以尝试对中文的句子进行分词，会发现，在默认情况下，Elasticsearch只能将中文中的每个字拆出来，并不能正确的处理各个词语！</p>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">### 测试分词 -- 中文</span><br><span class="line">GET http://localhost:9200/_analyze</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;text&quot;: &quot;很高兴认识你！&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以在Elasticsearch中添加新的分词插件来解决以上问题，经典的中文分词插件就是ik分词器。</p>
+<p>所有插件都应该放在Elasticsearch下的plugin文件夹下：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810114606110.png" alt="image-20230810114606110"></p>
+<p>你需要将下载得到的ik分词器的压缩包解压出来，将解压得到的文件夹放在<code>plugins</code>文件夹下，而ik分词器的文件夹名称就叫<code>ik</code>即可：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810114744905.png" alt="image-20230810114744905"></p>
+<p><strong>注意：</strong>完成后，需要重启Elasticsearch（关了再打开）才可以应用新添加的分词器！</p>
+<p>接下来，你就可以使用IK分词器对中文的句子进行分词！你需要在请求参数中通过<code>analyzer</code>属性来指定分词器，取值可以是IK分词器提供的<code>ik_smart</code>或<code>ik_max_word</code>，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">### 测试分词 -- 中文 -- ik_smart</span><br><span class="line">GET http://localhost:9200/_analyze</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;ik_smart&quot;,</span><br><span class="line">  &quot;text&quot;: &quot;很高兴认识你！&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 测试分词 -- 中文 -- ik_max_word</span><br><span class="line">GET http://localhost:9200/_analyze</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">  &quot;text&quot;: &quot;很高兴认识你！&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用IK分词器时，可以自造词！例如：</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230810140842583.png" alt="image-20230810140842583"></p>
+<h1 id="Elasticsearch文档数据库的相关概念"><a href="#Elasticsearch文档数据库的相关概念" class="headerlink" title="Elasticsearch文档数据库的相关概念"></a>Elasticsearch文档数据库的相关概念</h1><p><strong>索引（index &#x2F; indices）</strong></p>
+<ul>
+<li>相当于MySQL中的Database</li>
+</ul>
+<p><strong>类型（type &#x2F; types）</strong></p>
+<ul>
+<li>相当于MySQL中的Table，可以自行创建“类型”，或者，如果不关心“类型”，使用 <code>_doc</code> 表示类型名</li>
+<li>ES本身并不注重“类型”的概念，甚至在较高版本（8.x或以上）基本已废弃此概念</li>
+</ul>
+<p><strong>文档（document &#x2F; documents）</strong></p>
+<ul>
+<li>相当于MySQL中各数据表中一行行的数据</li>
+<li>在ES中每个数据都是由JSON格式组织的</li>
+</ul>
+<p><strong>字段（field &#x2F; fields）</strong></p>
+<ul>
+<li>相当于MySQL中的Column</li>
+</ul>
+<h1 id="基于RESTful访问Elasticsearch"><a href="#基于RESTful访问Elasticsearch" class="headerlink" title="基于RESTful访问Elasticsearch"></a>基于RESTful访问Elasticsearch</h1><h2 id="操作汇总"><a href="#操作汇总" class="headerlink" title="操作汇总"></a>操作汇总</h2><h2 id="添加文档"><a href="#添加文档" class="headerlink" title="添加文档"></a>添加文档</h2><p><strong>添加文档（使用ES随机生成的ID值）</strong></p>
+<p>请求格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST http://localhost:9200/&#123;索引名&#125;/&#123;类型名&#125;</span><br></pre></td></tr></table></figure>
+
+<p>提示：添加文档时，如果索引不存在，会自动创建索引，如果类型不存在，会自动创建类型！</p>
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">### 添加文档</span><br><span class="line">POST http://localhost:9200/index_crud/_doc</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 998,</span><br><span class="line">  &quot;title&quot;: &quot;2023新茶上市，赔本大甩卖&quot;,</span><br><span class="line">  &quot;sort&quot;: 188</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>添加文档（自行指定ID值）</strong></p>
+<p>请求格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PUT http://localhost:9200/&#123;索引名&#125;/&#123;类型名&#125;/&#123;文档ID&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">### 添加文档（自行指定ID值）</span><br><span class="line">PUT http://localhost:9200/index_crud/_doc/Tea9527</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 999,</span><br><span class="line">  &quot;title&quot;: &quot;2023老茶上市，卖得也相当不错&quot;,</span><br><span class="line">  &quot;sort&quot;: 199</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><p><strong>根据ID删除文档</strong></p>
+<p>请求格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE http://localhost:9200/&#123;索引名&#125;/&#123;类型名&#125;/&#123;文档ID&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### 根据ID删除文档</span><br><span class="line">DELETE http://localhost:9200/index_crud/_doc/Tea9527</span><br></pre></td></tr></table></figure>
+
+<p>提示：如果尝试删除的文档不存在，将响应<code>404</code>错误！</p>
+<p><strong>删除索引</strong></p>
+<p>请求格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE http://localhost:9200/&#123;索引名&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### 删除索引</span><br><span class="line">DELETE http://localhost:9200/index_crud</span><br></pre></td></tr></table></figure>
+
+<p>提示：如果尝试删除的索引不存在，将响应<code>404</code>错误！</p>
+<h2 id="修改文档"><a href="#修改文档" class="headerlink" title="修改文档"></a>修改文档</h2><p><strong>修改文档（更新整篇文档）</strong></p>
+<p>请求格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PUT http://localhost:9200/&#123;索引名&#125;/&#123;类型名&#125;/&#123;文档ID&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">### 修改文档（更新整篇文档）</span><br><span class="line">PUT http://localhost:9200/index_crud/_doc/Tea9527</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 999,</span><br><span class="line">  &quot;title&quot;: &quot;2023老茶上市，卖得也相当不错&quot;,</span><br><span class="line">  &quot;sort&quot;: 199,</span><br><span class="line">  &quot;description&quot;: &quot;这个老茶味道很好，强烈推荐！&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：以上做法将使用请求参数替换原有的整篇文档！</p>
+<p><strong>修改文档（局部修改）</strong></p>
+<p>请求格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST http://localhost:9200/&#123;索引名&#125;/&#123;类型名&#125;/&#123;文档ID&#125;/_update</span><br></pre></td></tr></table></figure>
+
+<p>请求参数：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">	<span class="attr">&quot;doc&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        需要更新的数据的参数</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">### 修改文档（局部修改）</span><br><span class="line">POST http://localhost:9200/index_crud/_doc/Tea9527/_update</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;doc&quot;: &#123;</span><br><span class="line">    &quot;sort&quot;: 189,</span><br><span class="line">    &quot;description&quot;: &quot;老茶和新茶味道还是挺不一样，要不，买个试试？&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：如果请求参数中包含新的属性（原文档中没有的属性），也会更新成功，且在文档中新增新的属性！</p>
+<h2 id="查看文档"><a href="#查看文档" class="headerlink" title="查看文档"></a>查看文档</h2><p><strong>查看某个索引中的所有文档</strong></p>
+<p>请求格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://localhost:9200/&#123;索引名&#125;/_search</span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### 查看某个索引中的所有文档</span><br><span class="line">GET http://localhost:9200/index_crud/_search</span><br></pre></td></tr></table></figure>
+
+<p><strong>根据ID访问文档</strong></p>
+<p>请求格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://localhost:9200/&#123;索引名&#125;/&#123;类型名&#125;/&#123;文档ID&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### 根据ID访问文档</span><br><span class="line">GET http://localhost:9200/index_crud/_doc/yjEl3okBucTgSd_ILGK2</span><br></pre></td></tr></table></figure>
+
+<h1 id="Elasticsearch中的数据类型"><a href="#Elasticsearch中的数据类型" class="headerlink" title="Elasticsearch中的数据类型"></a>Elasticsearch中的数据类型</h1><p>在Elasticsearch中，各字段的值也是有数据类型的，大致为：</p>
+<ul>
+<li>字符串类型：<code>text</code>、<code>keyword</code><ul>
+<li><code>text</code>类型在被处理时，默认会被分词<ul>
+<li>默认</li>
+</ul>
+</li>
+<li><code>keyword</code>类型在被处理时，默认不会被分词</li>
+</ul>
+</li>
+<li>数值类型：<code>byte</code>、<code>short</code>、<code>integer</code>、<code>long</code>、<code>float</code>、<code>double</code>等</li>
+<li>布尔类型：<code>boolean</code></li>
+<li>日期类型：<code>date</code></li>
+</ul>
+<p>例如，准备一些测试数据：</p>
+<table>
+<thead>
+<tr>
+<th>ID（id）</th>
+<th>标题（title）</th>
+<th>简介（description）</th>
+<th>排序序号（sort）</th>
+<th>售价（price）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>散装龙井</td>
+<td>好喝又实惠</td>
+<td>160</td>
+<td>300</td>
+</tr>
+<tr>
+<td>2</td>
+<td>大红袍大礼包</td>
+<td>性价比之王</td>
+<td>190</td>
+<td>688</td>
+</tr>
+<tr>
+<td>3</td>
+<td>龙井礼盒</td>
+<td>送礼必备</td>
+<td>130</td>
+<td>888</td>
+</tr>
+<tr>
+<td>4</td>
+<td>精装陈年老普洱</td>
+<td>收藏珍品</td>
+<td>150</td>
+<td>988</td>
+</tr>
+<tr>
+<td>5</td>
+<td>精装铁观音大礼包</td>
+<td>家中常备</td>
+<td>160</td>
+<td>700</td>
+</tr>
+</tbody></table>
+<p>在使用Elasticsearch时，应该先手动创建索引，并确定此索引中的文档有哪些字段，及字段的数据类型！</p>
+<p>请求格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">### 自定义索引及其文档的属性和数据类型</span><br><span class="line">PUT http://localhost:9200/&#123;索引名&#125;</span><br><span class="line">Content-Type: application/json; charset=UTF-8</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">	&quot;mappings&quot;: &#123;</span><br><span class="line">		&quot;properties&quot;: &#123;</span><br><span class="line">			&quot;&#123;字段名1&#125;&quot;: &#123;</span><br><span class="line">				&quot;type&quot;: &quot;&#123;字段类型1&#125;&quot;,</span><br><span class="line">				&quot;analyzer&quot;: &quot;&#123;分词器名称，仅用于text类型的字段&#125;&quot;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;&#123;字段名2&#125;&quot;: &#123;</span><br><span class="line">				&quot;type&quot;: &quot;&#123;字段类型2&#125;&quot;</span><br><span class="line">			&#125;,</span><br><span class="line">			... ...</span><br><span class="line">			&quot;&#123;字段名n&#125;&quot;: &#123;</span><br><span class="line">				&quot;type&quot;: &quot;&#123;字段类型n&#125;&quot;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">### 自定义索引及其文档的属性和数据类型</span><br><span class="line">PUT http://localhost:9200/index_search</span><br><span class="line">Content-Type: application/json; charset=UTF-8</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;id&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;long&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;title&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;description&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;sort&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;long&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;price&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;long&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>插入测试数据示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">### 添加文档--测试数据1</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/1</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 1,</span><br><span class="line">  &quot;title&quot;: &quot;散装龙井&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;好喝又实惠&quot;,</span><br><span class="line">  &quot;sort&quot;: 160,</span><br><span class="line">  &quot;price&quot;: 300</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 添加文档--测试数据2</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/2</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 2,</span><br><span class="line">  &quot;title&quot;: &quot;大红袍大礼包&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;性价比之王&quot;,</span><br><span class="line">  &quot;sort&quot;: 190,</span><br><span class="line">  &quot;price&quot;: 688</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 添加文档--测试数据3</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/3</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 3,</span><br><span class="line">  &quot;title&quot;: &quot;龙井礼盒&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;送礼必备&quot;,</span><br><span class="line">  &quot;sort&quot;: 130,</span><br><span class="line">  &quot;price&quot;: 888</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 添加文档--测试数据4</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/4</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 4,</span><br><span class="line">  &quot;title&quot;: &quot;精装陈年老普洱&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;收藏珍品&quot;,</span><br><span class="line">  &quot;sort&quot;: 150,</span><br><span class="line">  &quot;price&quot;: 988</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 添加文档--测试数据5</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/5</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 5,</span><br><span class="line">  &quot;title&quot;: &quot;精装铁观音大礼包&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;家中常备&quot;,</span><br><span class="line">  &quot;sort&quot;: 160,</span><br><span class="line">  &quot;price&quot;: 700</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h1><p><strong>简单的搜索</strong></p>
+<p>请求格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://localhost:9200/&#123;索引名&#125;/_search?q=&#123;字段名:查询关键字&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">### 根据关键字执行简单的搜索</span><br><span class="line">GET http://localhost:9200/index_search/_search?q=title:龙井</span><br></pre></td></tr></table></figure>
+
+<p><strong>高级搜索</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">### 添加文档--测试数据1</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/1</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 1,</span><br><span class="line">  &quot;title&quot;: &quot;散装龙井&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;好喝又实惠&quot;,</span><br><span class="line">  &quot;sort&quot;: 160,</span><br><span class="line">  &quot;price&quot;: 300</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 添加文档--测试数据2</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/2</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 2,</span><br><span class="line">  &quot;title&quot;: &quot;大红袍大礼包&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;性价比之王&quot;,</span><br><span class="line">  &quot;sort&quot;: 190,</span><br><span class="line">  &quot;price&quot;: 688</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 添加文档--测试数据3</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/3</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 3,</span><br><span class="line">  &quot;title&quot;: &quot;龙井礼盒&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;送礼必备&quot;,</span><br><span class="line">  &quot;sort&quot;: 130,</span><br><span class="line">  &quot;price&quot;: 888</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 添加文档--测试数据4</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/4</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 4,</span><br><span class="line">  &quot;title&quot;: &quot;精装陈年老普洱&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;收藏珍品&quot;,</span><br><span class="line">  &quot;sort&quot;: 150,</span><br><span class="line">  &quot;price&quot;: 988</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 添加文档--测试数据5</span><br><span class="line">PUT http://localhost:9200/index_search/_doc/5</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: 5,</span><br><span class="line">  &quot;title&quot;: &quot;精装铁观音大礼包&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;家中常备&quot;,</span><br><span class="line">  &quot;sort&quot;: 160,</span><br><span class="line">  &quot;price&quot;: 700</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line">### 删除索引</span><br><span class="line">DELETE http://localhost:9200/index_search</span><br><span class="line"></span><br><span class="line">### 自定义索引及其文档的属性和数据类型</span><br><span class="line">PUT http://localhost:9200/index_search</span><br><span class="line">Content-Type: application/json; charset=UTF-8</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;id&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;long&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;title&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;description&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;sort&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;long&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;price&quot;: &#123;</span><br><span class="line">        &quot;type&quot;: &quot;long&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 查看某个索引中的基本信息</span><br><span class="line">GET http://localhost:9200/index_search</span><br><span class="line"></span><br><span class="line">### 查看某个索引中的所有文档</span><br><span class="line">GET http://localhost:9200/index_search/_search</span><br><span class="line"></span><br><span class="line">### 简单搜索：根据关键字执行简单的搜索：搜索title中包含“龙井”的数据</span><br><span class="line">GET http://localhost:9200/index_search/_search?q=title:龙井</span><br><span class="line"></span><br><span class="line">### 简单搜索：根据关键字执行简单的搜索：搜索title中包含“精装”的数据，注意，包含“散装”或其它“?装”的数据也会出现在结果中</span><br><span class="line">GET http://localhost:9200/index_search/_search?q=title:精装</span><br><span class="line"></span><br><span class="line">### 简单搜索：根据关键字执行简单的搜索：搜索description中包含“收藏珍品”的数据</span><br><span class="line">GET http://localhost:9200/index_search/_search?q=description:珍品</span><br><span class="line"></span><br><span class="line">### 高级搜索：自定义query，在query属性下配置match属性，在match属性下再配置搜索的字段名与关键字</span><br><span class="line">GET http://localhost:9200/index_search/_search</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;title&quot;: &quot;龙井&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 高级搜索：多条件搜索：自定义query，在query属性下配置bool属性，在bool属性下再配置must，must的值是数组，数组元素就是匹配规则，must下的多个规则必须同时匹配才能被搜索到</span><br><span class="line">### 除了must以外，还可以是should，should只需要匹配其中任意1个条件即可</span><br><span class="line">### 另外，还可以是must_not，即不允许是某种规则</span><br><span class="line">### must &gt;&gt;&gt; AND</span><br><span class="line">### should &gt;&gt;&gt; OR</span><br><span class="line">### must_not &gt;&gt;&gt; !=</span><br><span class="line">GET http://localhost:9200/index_search/_search</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;bool&quot;: &#123;</span><br><span class="line">      &quot;should&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;title&quot;: &quot;龙井&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          &quot;match&quot;: &#123;</span><br><span class="line">            &quot;description&quot;: &quot;送礼必备&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 高级搜索：查询指定字段的数据，在query同级配置_source，此属性的值是数组，用于指定字段列表</span><br><span class="line">GET http://localhost:9200/index_search/_search</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;_source&quot;: [</span><br><span class="line">    &quot;id&quot;,</span><br><span class="line">    &quot;title&quot;,</span><br><span class="line">    &quot;price&quot;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 高级搜索：指定排序，在query同级配置sort属性，在sort属性中配置排序规则，默认根据字段值升序排列，也可以配置order属性来指定规则，取值为desc时为降序</span><br><span class="line">GET http://localhost:9200/index_search/_search</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;sort&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;sort&quot;: &#123;&#125;,</span><br><span class="line">      &quot;id&quot;: &#123;</span><br><span class="line">        &quot;order&quot;: &quot;desc&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 高级搜索：分页搜索，在query同级配置from和size属性</span><br><span class="line">GET http://localhost:9200/index_search/_search</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;sort&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;id&quot;: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;from&quot;: 1,</span><br><span class="line">  &quot;size&quot;: 3</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### 高级搜索：高亮显示，在query同级配置highlight属性进行配置，在highlight中配置fields属性，可以指定对应的字段</span><br><span class="line">### 执行搜索后，匹配的结果中会出现同级的highlight数据，其中搜索的关键字默认会被&lt;em&gt;标签框住，后续在客户端拿到此结果后可以对&lt;em&gt;标签设计CSS样式</span><br><span class="line">### 或者，在配置高亮搜索时，还可以在highlight标签下配置pre_tags和post_tags属性，以替换&lt;em&gt;和&lt;/em&gt;标签</span><br><span class="line">GET http://localhost:9200/index_search/_search</span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;title&quot;: &quot;精装&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;highlight&quot;: &#123;</span><br><span class="line">    &quot;fields&quot;: &#123;</span><br><span class="line">      &quot;title&quot;: &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;pre_tags&quot;: &quot;&lt;font style=&#x27;color: red;&#x27;&gt;&quot;,</span><br><span class="line">    &quot;post_tags&quot;: &quot;&lt;/font&gt;&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="基于Spring-Boot的Elasticsearch编程"><a href="#基于Spring-Boot的Elasticsearch编程" class="headerlink" title="基于Spring Boot的Elasticsearch编程"></a>基于Spring Boot的Elasticsearch编程</h1><h2 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h2><p>在Spring Boot中，实现Elasticsearch编程需要添加依赖：<code>spring-boot-starter-data-elasticsearch</code></p>
+<h2 id="定义文档数据的Java类"><a href="#定义文档数据的Java类" class="headerlink" title="定义文档数据的Java类"></a>定义文档数据的Java类</h2><p>注意：与ES中的文档对应的Java类，并不需要与实体类、用于Redis的相关类保持一致！</p>
+<p>使用ES时的Java类可以完全自由设计，只需要包含显示在“搜索结果中的属性（最终显示在客户端界面中的属性）”及“执行搜索时需要匹配的属性”即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GoodsSearchVO</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String categoryName;</span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line">    <span class="keyword">private</span> String brief;</span><br><span class="line">    <span class="keyword">private</span> String coverUrl;</span><br><span class="line">    <span class="keyword">private</span> BigDecimal salePrice;</span><br><span class="line">    <span class="keyword">private</span> String keywords;</span><br><span class="line">    <span class="keyword">private</span> Integer sort;</span><br><span class="line">    <span class="keyword">private</span> Integer isRecommend;</span><br><span class="line">    <span class="keyword">private</span> Integer salesCount;</span><br><span class="line">    <span class="keyword">private</span> Integer commentCount;</span><br><span class="line">    <span class="keyword">private</span> Integer positiveCommentCount;</span><br><span class="line">    <span class="keyword">private</span> LocalDateTime gmtCreate;</span><br><span class="line">    <span class="keyword">private</span> LocalDateTime gmtModified;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="编写数据访问接口"><a href="#编写数据访问接口" class="headerlink" title="编写数据访问接口"></a>编写数据访问接口</h2><p>在Spring Boot项目中添加了Elasticsearch编程的依赖项后，只需要自定义接口，继承自框架中的<code>Repository</code>接口即可表示自定义接口是用于访问数据的，<code>Repository</code>接口需要指定2个泛型，分别是你要操作的数据的类型，和此数据在ES中的ID的类型。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/20/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/" rel="prev" title="数据库中的索引">
+                  <i class="fa fa-angle-left"></i> 数据库中的索引
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/20/AOP/" rel="next" title="AOP">
+                  AOP <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sanpoi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:51</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

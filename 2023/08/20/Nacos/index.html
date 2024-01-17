@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Nacos（全称为&quot;Naming and Configuration Service&quot;）是一个用于实现动态服务发现、配置管理和服务治理的开源项目。它提供了一种简单而强大的方式来注册、发现和配置微服务，帮助开发人员构建和管理云原生应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nacos">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/08/20/Nacos/index.html">
+<meta property="og:site_name" content="Sanpoi">
+<meta property="og:description" content="Nacos（全称为&quot;Naming and Configuration Service&quot;）是一个用于实现动态服务发现、配置管理和服务治理的开源项目。它提供了一种简单而强大的方式来注册、发现和配置微服务，帮助开发人员构建和管理云原生应用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144059439.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144257043.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144422374.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144918127.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816145151224.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816145706835.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816145749200.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816145838969.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816150103065.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816153113674.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816153952492.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816160109450.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816164745744.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816174705442.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817091643971.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817101522647.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817101902565.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817102744053.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817103259615.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817104031372.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817114540807.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817142933153.png">
+<meta property="og:image" content="d:\IDEA\IdeaProjects\jsd2304-notes\notes\DAY04\images\image-20230817144439161.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817145035544.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817145214019.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817163656293.png">
+<meta property="article:published_time" content="2023-08-20T07:25:06.000Z">
+<meta property="article:modified_time" content="2023-08-25T06:42:20.359Z">
+<meta property="article:author" content="Sanpoi">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144059439.png">
+
+
+<link rel="canonical" href="https://sanpoi6.github.io/2023/08/20/Nacos/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/20/Nacos/","path":"2023/08/20/Nacos/","title":"Nacos"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nacos | Sanpoi</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sanpoi</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">东隅已逝，桑榆非晚</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nacos"><span class="nav-number">1.</span> <span class="nav-text">Nacos</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nacos%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">Nacos介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87nacos%E7%8E%AF%E5%A2%83"><span class="nav-number">1.2.</span> <span class="nav-text">准备nacos环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">启动服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.2.</span> <span class="nav-text">启动服务端可能出现的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2%E5%85%B3%E9%97%ADnacos%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">停止关闭nacos服务端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nacos%E6%8E%A7%E5%88%B6%E5%8F%B0%E9%A1%B5%E9%9D%A2"><span class="nav-number">1.3.</span> <span class="nav-text">nacos控制台页面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E8%8F%9C%E5%8D%95%E7%AE%80%E4%BB%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">控制台菜单简介</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nacos%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="nav-number">1.4.</span> <span class="nav-text">nacos的客户端配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.4.1.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Springboot%E6%95%B4%E5%90%88nacos"><span class="nav-number">1.4.2.</span> <span class="nav-text">Springboot整合nacos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%92%8C%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BA%A4%E4%BA%92%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.3.</span> <span class="nav-text">客户端和服务端交互基本原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nacos%E5%AE%A2%E6%88%B7%E7%AB%AFyaml%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">nacos客户端yaml详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B4%E6%97%B6%E5%AE%9E%E4%BE%8B-%E6%B0%B8%E4%B9%85%E5%AE%9E%E4%BE%8B"><span class="nav-number">2.1.</span> <span class="nav-text">临时实例 永久实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%AE%9E%E4%BE%8B%E7%9A%84ip%E5%9C%B0%E5%9D%80"><span class="nav-number">2.2.</span> <span class="nav-text">服务实例的ip地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4"><span class="nav-number">2.3.</span> <span class="nav-text">命名空间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E9%85%8D%E7%BD%AE"><span class="nav-number">2.4.</span> <span class="nav-text">分组配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%89%94%E9%99%A4"><span class="nav-number">2.5.</span> <span class="nav-text">服务剔除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%8E%9F%E7%90%86%E5%81%9A%E7%8E%B0%E8%B1%A1%E5%88%86%E6%9E%90"><span class="nav-number">2.6.</span> <span class="nav-text">利用原理做现象分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nacos-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83"><span class="nav-number">3.</span> <span class="nav-text">nacos 配置中心</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">3.1.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E7%BB%93%E6%9E%84"><span class="nav-number">3.2.</span> <span class="nav-text">管理结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0nacos%E9%85%8D%E7%BD%AE%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%B4%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">实现nacos配置客户端整合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6"><span class="nav-number">3.4.</span> <span class="nav-text">配置远程文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E5%8C%96"><span class="nav-number">3.5.</span> <span class="nav-text">本地配置远程化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nacos%E9%98%B6%E6%AE%B5%E6%80%A7%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">nacos阶段性总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E6%80%A7%E6%9E%B6%E6%9E%84"><span class="nav-number">4.1.</span> <span class="nav-text">阶段性架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nacos%E6%A0%B8%E5%BF%83%E5%86%85%E5%AE%B9"><span class="nav-number">4.2.</span> <span class="nav-text">nacos核心内容</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sanpoi"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Sanpoi</p>
+  <div class="site-description" itemprop="description">人无远虑，必有近忧</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/20/Nacos/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Sanpoi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanpoi">
+      <meta itemprop="description" content="人无远虑，必有近忧">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nacos | Sanpoi">
+      <meta itemprop="description" content="Nacos（全称为"Naming and Configuration Service"）是一个用于实现动态服务发现、配置管理和服务治理的开源项目。它提供了一种简单而强大的方式来注册、发现和配置微服务，帮助开发人员构建和管理云原生应用。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nacos
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-08-20 15:25:06" itemprop="dateCreated datePublished" datetime="2023-08-20T15:25:06+08:00">2023-08-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-08-25 14:42:20" itemprop="dateModified" datetime="2023-08-25T14:42:20+08:00">2023-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">微服务相关组件</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">Nacos（全称为"Naming and Configuration Service"）是一个用于实现动态服务发现、配置管理和服务治理的开源项目。它提供了一种简单而强大的方式来注册、发现和配置微服务，帮助开发人员构建和管理云原生应用。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Nacos"><a href="#Nacos" class="headerlink" title="Nacos"></a>Nacos</h1><h2 id="Nacos介绍"><a href="#Nacos介绍" class="headerlink" title="Nacos介绍"></a>Nacos介绍</h2><p>官网: <a target="_blank" rel="noopener" href="https://nacos.io/en-us/docs/v2/what-is-nacos.html">https://nacos.io/en-us/docs/v2/what-is-nacos.html</a></p>
+<p>Nacos 致力于帮助您<strong>发现</strong>、<strong>配置</strong>和管理<strong>微服务</strong>。Nacos 提供了一组简单易用的特性集，帮助您快速实现动态服务发现、服务配置、服务元数据及流量管理。</p>
+<p>Nacos在微服务架构中,实现使用的功能包括 服务治理,配置的管理.</p>
+<p>当前市场上任何一种微服务落地方案,都需要这种软件存在,即使不使用nacos,也需要别的相同功能的软件技术来代替(console eureka zookeeper)</p>
+<p>核心功能:</p>
+<p><strong>注册中心</strong></p>
+<p>​	发现(抓取 查询)</p>
+<p>​    注册(新增)</p>
+<p><strong>配置中心</strong></p>
+<h2 id="准备nacos环境"><a href="#准备nacos环境" class="headerlink" title="准备nacos环境"></a>准备nacos环境</h2><p>nacos的使用结构</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144059439.png" alt="image-20230816144059439" style="zoom:50%;" />
+
+<h3 id="启动服务端"><a href="#启动服务端" class="headerlink" title="启动服务端"></a>启动服务端</h3><ul>
+<li>nacos服务端–解压安装包</li>
+</ul>
+<p>客户端软件包需要从官网下载,比较慢,课前资料中,准备了一个已经下载好的zip包.</p>
+<p>解压到一个<strong>没有中文,没有空格</strong>的路径.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144257043.png" alt="image-20230816144257043" style="zoom: 67%;" />
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144422374.png" alt="image-20230816144422374" style="zoom:50%;" />
+
+<ul>
+<li>启动nacos–运行脚本</li>
+</ul>
+<p>进入到nacos的家目录的\bin文件夹,在命令行中,执行命令</p>
+<p>windows</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">startup.cmd -m standalone</span><br></pre></td></tr></table></figure>
+
+<p>mac 两种启动方式</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./startup.sh -m standalone</span><br><span class="line">startup.sh -m standalone</span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816144918127.png" alt="image-20230816144918127" style="zoom:50%;" />
+
+<h3 id="启动服务端可能出现的问题"><a href="#启动服务端可能出现的问题" class="headerlink" title="启动服务端可能出现的问题"></a>启动服务端可能出现的问题</h3><ul>
+<li>没有JAVA_HOME 提示错误</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816145151224.png" alt="image-20230816145151224"></p>
+<p>在当前操作系统中,没有提供JAVA_HOME 环境变量.</p>
+<p><strong>注意: 请配置一个jdk1.8的环境,并且,不要有空格</strong></p>
+<p>配置windows环境变量.</p>
+<ol>
+<li>控制面版 搜索高级系统设置</li>
+</ol>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816145706835.png" alt="image-20230816145706835"></p>
+<ol start="2">
+<li>进入环境变量配置</li>
+</ol>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816145749200.png" alt="image-20230816145749200"></p>
+<ul>
+<li>新建环境变量</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816145838969.png" alt="image-20230816145838969"></p>
+<ul>
+<li>新建填写JAVA_HOME</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816150103065.png" alt="image-20230816150103065"></p>
+<ul>
+<li>确定所有</li>
+</ul>
+<h3 id="停止关闭nacos服务端"><a href="#停止关闭nacos服务端" class="headerlink" title="停止关闭nacos服务端"></a>停止关闭nacos服务端</h3><p>直接在cmd窗口 或者终端 ctrl+c.</p>
+<p>看到提示符行重新出现.</p>
+<h2 id="nacos控制台页面"><a href="#nacos控制台页面" class="headerlink" title="nacos控制台页面"></a>nacos控制台页面</h2><p>nacos服务端启动后,会提供一个可以访问的页面控制台,经常需要去访问</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8848/nacos">http://localhost:8848/nacos</a> 访问登录控制台</p>
+<p>用户名密码:  nacos&#x2F;nacos</p>
+<h3 id="控制台菜单简介"><a href="#控制台菜单简介" class="headerlink" title="控制台菜单简介"></a>控制台菜单简介</h3><p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816153113674.png" alt="image-20230816153113674"></p>
+<ol>
+<li>配置管理: nacos作为配置中心保存管理的数据显示</li>
+<li>服务管理: nacos作为注册中心保存的服务数据显示</li>
+<li>权限管理(不用):  典型的用户 角色 权限管理的逻辑</li>
+<li>命名空间: 管理不同开发环境的配置和注册信息隔离的相关内容</li>
+<li>集群管理(不用): 如果nacos集群启动的,集群管理可以对集群中的nacos节点做管理操作,下线,查看状态.</li>
+</ol>
+<h2 id="nacos的客户端配置"><a href="#nacos的客户端配置" class="headerlink" title="nacos的客户端配置"></a>nacos的客户端配置</h2><h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>是一个web应用绑定的组件.每个nacos客户端可以通过web应用的配置,和服务端进行逻辑交互,帮助web应用整合到微服务框架组件结构中.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816153952492.png" alt="image-20230816153952492" style="zoom:50%;" />
+
+<h3 id="Springboot整合nacos"><a href="#Springboot整合nacos" class="headerlink" title="Springboot整合nacos"></a>Springboot整合nacos</h3><p>springboot存在,任何经过整理优化的软件技术,可以通过非常简单的步骤完成</p>
+<ol>
+<li>依赖</li>
+<li>yaml配置(交给底层配置类)</li>
+<li>做一些简单的代码配置或者注解的使用</li>
+</ol>
+<p>选择案例演示-stock**&#x2F;cart**</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--引入nacos的依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="comment">#spring 应用名称</span></span><br><span class="line">  <span class="comment">#微服务中 服务名称</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">luban-demo-cart</span></span><br><span class="line">  <span class="comment">#微服务 nacos客户端配置属性</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">discovery:</span></span><br><span class="line">        <span class="comment"># 提供给当前底层客户端nacos的服务端地址 域名:端口</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br></pre></td></tr></table></figure>
+
+<p>nacos客户端整合没有配置类和注解使用的需求,所以只有2步需要.</p>
+<p>将cart-adapter启动,观察一下日志文件. 观察nacos的控制台.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816160109450.png" alt="image-20230816160109450" style="zoom:50%;" />
+
+
+
+<h3 id="客户端和服务端交互基本原理"><a href="#客户端和服务端交互基本原理" class="headerlink" title="客户端和服务端交互基本原理"></a>客户端和服务端交互基本原理</h3><p>nacos服务端支持http协议的访问.可以将其当成一个支持http协议web服务.</p>
+<p>nacos客户端只要通过http协议访问nacos服务端暴露的接口,就可以实现和服务端交互</p>
+<p>通过官网提供的信息.</p>
+<p>nacos服务端 具备一个接收post请求的接口地址</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/nacos/v1/ns/instance</span><br></pre></td></tr></table></figure>
+
+<p>nacos客户端请求到这个地址,携带一些参数,可以在nacos服务生成注册信息(服务信息)</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">serviceName=luban-demo-stock&amp;ip=20.18.7.10&amp;port=8080</span><br></pre></td></tr></table></figure>
+
+<p>可以使用任何支持http请求的插件 实现在nacos服务端进行注册测试,比如postman</p>
+<p>比如 curl命令.</p>
+<p>curl 支持http协议访问的插件命令.用法:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X [METHOD] args目标地址</span><br></pre></td></tr></table></figure>
+
+<p>如果使用curl发送一个post请求</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST &quot;http://localhost:8848/nacos/v1/ns/instance?serviceName=test-demo&amp;ip=127.0.0.1&amp;port=10010&quot;</span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816164745744.png" alt="image-20230816164745744" style="zoom:50%;" />
+
+<ul>
+<li>结论1:<ul>
+<li>客户端nacos进程已经组织好了所有的交互代码逻辑,无需我们介入,我们只需要将这个客户端进程整合到web应用.自动和服务交互,注册当前服务实例信息.携带当前web应用中服务名称(spring.application.name),ip(自动获取),port(server.port).服务端会记录保存这个数据到内存.</li>
+</ul>
+</li>
+</ul>
+<p>nacos服务端除了提供注册的接口(新增),还提供了一个抓取的接口(查询)</p>
+<p>接口地址:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/nacos/v1/ns/instance/list</span><br></pre></td></tr></table></figure>
+
+<p>通过这个接口,可以传递参数,获取某个服务的详细信息.</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">serviceName=luban-demo-stock</span><br></pre></td></tr></table></figure>
+
+<p>通过curl命令来测试</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X GET &quot;http://localhost:8848/nacos/v1/ns/instance/list?serviceName=luban-demo-cart-haha&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;hosts&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;ip&quot;</span><span class="punctuation">:</span> <span class="string">&quot;10.1.6.132&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">10005</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;valid&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;healthy&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;marked&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;instanceId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;10.1.6.132#10005#DEFAULT#DEFAULT_GROUP@@luban-demo-cart-haha&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;metadata&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;preserved.register.source&quot;</span><span class="punctuation">:</span> <span class="string">&quot;SPRING_CLOUD&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;weight&quot;</span><span class="punctuation">:</span> <span class="number">1.0</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;clusterName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;DEFAULT&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;serviceName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;luban-demo-cart-haha&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;ephemeral&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;dom&quot;</span><span class="punctuation">:</span> <span class="string">&quot;luban-demo-cart-haha&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;DEFAULT_GROUP@@luban-demo-cart-haha&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;cacheMillis&quot;</span><span class="punctuation">:</span> <span class="number">3000</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;lastRefTime&quot;</span><span class="punctuation">:</span> <span class="number">1692176089735</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;checksum&quot;</span><span class="punctuation">:</span> <span class="string">&quot;e12bd76eb3558f8f25b480393365ea08&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;useSpecifiedURL&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;clusters&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;metadata&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230816174705442.png" alt="image-20230816174705442"></p>
+<p><strong>结论2</strong></p>
+<p>nacos客户端进程 除了进行注册以外,还会根据自己的需求,对nacos服务端保存的注册信息进行抓取.隔一段时间进行更新.</p>
+<h1 id="nacos客户端yaml详解"><a href="#nacos客户端yaml详解" class="headerlink" title="nacos客户端yaml详解"></a>nacos客户端yaml详解</h1><h2 id="临时实例-永久实例"><a href="#临时实例-永久实例" class="headerlink" title="临时实例 永久实例"></a>临时实例 永久实例</h2><p><strong>概念</strong>: 服务 服务实例(每一个web应用进程). 在一个服务中,服务实例多个</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817091643971.png" alt="image-20230817091643971" style="zoom:50%;" />
+
+<p><strong>插入技巧</strong>: 将项目添加一个插件资源</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--springboot构建插件--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.5.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>java 命令运行jar包 之前,先mvn package</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar **.jar -Xmx128m --server.port=1000</span><br></pre></td></tr></table></figure>
+
+<p>java -jar运行的是jar包文件,后面根据需求可以添加启动选项</p>
+<p>– yaml中的属性和值的选项是可以覆盖springboot源文件的</p>
+<p>当前启动进程是永久实例还是临时实例 true 表示临时实例 false表示永久实例</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">	<span class="attr">cloud:</span></span><br><span class="line">		<span class="attr">nacos:</span></span><br><span class="line">			<span class="attr">discovery:</span></span><br><span class="line">				<span class="attr">ephemeral:</span> </span><br></pre></td></tr></table></figure>
+
+<p>永久实例:nacos永远不删除的注册信息,就是永久实例.</p>
+<p>临时实例:暂时为某些应用,环境准备的扩容实例,就是定义为临时实例.</p>
+<p>为什么要分永久实例和临时实例:</p>
+<p>淘宝每一个功能都是一个<strong>服务</strong>,而且具备<strong>多个实例</strong>,平日访问是<strong>固定流量</strong>,所以使用永久实例支持,如果双11来临,<strong>流量激增</strong>,需要增加临时实例,等待11完成,删除临时实例</p>
+<h2 id="服务实例的ip地址"><a href="#服务实例的ip地址" class="headerlink" title="服务实例的ip地址"></a>服务实例的ip地址</h2><p>ip值是nacos客户端默认情况下根据寻找网卡的逻辑,自动从某一个网卡获取的ip地址.</p>
+<p><strong>概念</strong>: 服务器多网卡,每个网卡都有本机的一个ip地址网段,功能不一样,网络范围也不一样.</p>
+<p>如果ip地址是nacos自己选的,不一定能够选择正确的ip地址.</p>
+<p>正确的ip地址: 在nacos注册的ip 如果被别人抓取到,能够正常访问服务实例的ip地址.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">	<span class="attr">cloud:</span></span><br><span class="line">		<span class="attr">nacos:</span></span><br><span class="line">			<span class="attr">discovery:</span></span><br><span class="line">				<span class="attr">ip:</span> </span><br></pre></td></tr></table></figure>
+
+<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>开发过程中,使用的开发,测试,上线环境是不同.所以nacos提供隔离的环境.</p>
+<p>不同的环境 对应使用微服务框架的时候,nacos注册在不同的命名空间.</p>
+<ul>
+<li>nacos默认命名空间-public</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817101522647.png" alt="image-20230817101522647"></p>
+<p>nacos客户端配置的时候没有指定命名空间,默认使用public</p>
+<ul>
+<li>创建命名空间</li>
+</ul>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817101902565.png" alt="image-20230817101902565"></p>
+<ul>
+<li>nacos客户端指定注册命名空间</li>
+</ul>
+<p>使用属性配置namespace</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">	<span class="attr">cloud:</span></span><br><span class="line">		<span class="attr">nacos:</span></span><br><span class="line">			<span class="attr">discovery:</span></span><br><span class="line">				<span class="attr">namespace:</span> </span><br></pre></td></tr></table></figure>
+
+<p>配置命名空间的值,就是id. 36beb5da-ce42-49bc-937a-7cef0b1406d4</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817102744053.png" alt="image-20230817102744053" style="zoom:50%;" />
+
+<h2 id="分组配置"><a href="#分组配置" class="headerlink" title="分组配置"></a>分组配置</h2><p>NACOS管理的注册信息,同一个命名空间下有多个服务,但是服务注册可以放到<strong>不同的分组.</strong></p>
+<p>分组的主要目的是–<strong>灰度发布</strong>. 同时在环境中 存在多个版本不同的服务端进程.</p>
+<p>通过nacos客户端属性配置,默认不填写group 叫做DEFUALT_GROUP</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">	<span class="attr">cloud:</span></span><br><span class="line">		<span class="attr">nacos:</span></span><br><span class="line">			<span class="attr">discovery:</span></span><br><span class="line">				<span class="attr">group:</span> </span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817103259615.png" alt="image-20230817103259615" style="zoom:50%;" />
+
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817104031372.png" alt="image-20230817104031372"></p>
+<h2 id="服务剔除"><a href="#服务剔除" class="headerlink" title="服务剔除"></a>服务剔除</h2><p>nacos实例,作为一个进程,内部包含了一个nacos客户端,在启动注册之后,需要和nacos服务端建立一个健康状态检测机制.</p>
+<p><strong>永久实例:</strong> nacos服务端会进行下探. 主动询问. 如果下探发现没有响应,记录健康状态为false.下探不会停止.</p>
+<p><strong>临时实例:</strong> 临时实例自己,主动上报(心跳检测). nacos服务端记录每次上报的时间戳.</p>
+<p>服务端会根据时间戳的值,判断是否健康,是否剔除.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">	<span class="attr">cloud:</span></span><br><span class="line">		<span class="attr">nacos:</span></span><br><span class="line">			<span class="attr">discovery:</span></span><br><span class="line">				<span class="attr">heart-beat-interval:</span> <span class="number">5</span></span><br><span class="line">				<span class="attr">ip-delete-timeout:</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
+
+<p>时间具体设置的值,取决于什么因素.</p>
+<ul>
+<li><p>超时时间不能小于 间隔时间.</p>
+</li>
+<li><p>取决于网络因素</p>
+<ul>
+<li>网络畅通,抖动没有: 时间缩小 5 10</li>
+<li>网络经常抖动.放大 10 60</li>
+</ul>
+</li>
+</ul>
+<h2 id="利用原理做现象分析"><a href="#利用原理做现象分析" class="headerlink" title="利用原理做现象分析"></a>利用原理做现象分析</h2><ul>
+<li><p>启动一个cart永久实例 默认分组 默认命名空间 默认ip读取</p>
+</li>
+<li><p>停止这个永久实例 nacos下探找不到 记录不健康</p>
+</li>
+<li><p>修改属性变成临时实例 自定义分组 自定义命名空间 自定义ip</p>
+</li>
+<li><p>永久实例转变成健康 nacos利用当初永久实例的注册信息可以下探成功</p>
+</li>
+<li><p>停止的临时实例 nacos接收不到主动上报的心跳 记录不健康 过一段时间将注册信息提出</p>
+</li>
+<li><p>修改属性另一个自定义ip地址 临时实例启动 注册新的注册信息,和刚才临时实例在nacos记录的不是同一个对象.重新记录心跳时间戳</p>
+</li>
+</ul>
+<h1 id="nacos-配置中心"><a href="#nacos-配置中心" class="headerlink" title="nacos 配置中心"></a>nacos 配置中心</h1><h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>开发学习一个微服务架构,其中会有很多的服务,每个服务又有很多的实例.</p>
+<p>每个服务开发过程中,需要编辑配置大量的web文件,比如 yaml,json,html,xml,….</p>
+<p>这么多配置文本,是不方便统一管理的. 特点: 重复,同时变动…</p>
+<p><strong>在多团队和多人员开发的场景中,一般这种文件都要交给配置中心管理.</strong></p>
+<h2 id="管理结构"><a href="#管理结构" class="headerlink" title="管理结构"></a>管理结构</h2><p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817114540807.png" alt="image-20230817114540807"></p>
+<h2 id="实现nacos配置客户端整合"><a href="#实现nacos配置客户端整合" class="headerlink" title="实现nacos配置客户端整合"></a>实现nacos配置客户端整合</h2><p>需求: 在三个服务进程中,选取一个做案例 <strong>cart</strong>&#x2F;stock 整合步骤</p>
+<ol>
+<li><p>依赖 nacos config 客户端</p>
+</li>
+<li><p>yaml属性 告诉nacos 到哪个服务端读取哪些文件</p>
+</li>
+<li><p>简单配置代码或注解</p>
+<p><strong>第一步</strong>.依赖</p>
+</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--引入nacos依赖-配置中心客户端依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--为属性配置yaml准备的一个依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-bootstrap<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​		<strong>第二步</strong>: yaml配置</p>
+<p>在项目中引入一个bootstrap.yaml配置文件.</p>
+<p>如果当前 springboot版本是2.3.X 或更早,不需要引用依赖spring-cloud-starter-bootstrap.</p>
+<p>但是如果springboot高于2.3.X(2.5.9) 需要引用.</p>
+<p>引入的新的配置文件,和application.yml配置文件区别是什么?</p>
+<ul>
+<li>bootstrap.yaml先于application.yaml加载</li>
+</ul>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817142933153.png" alt="image-20230817142933153" style="zoom:50%;" />
+
+<p>bootstrap.yaml 应该只需要支持 nacosConfig客户端连接远程配置中心即可</p>
+<ul>
+<li>配置bootstrap的格式</li>
+</ul>
+<ol>
+<li>如果不区分开发环境,和application.yaml没区别</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># 连接配置中心的时候需要配置客户端提供的参数</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">luban-demo-cart</span></span><br><span class="line">  <span class="comment"># 微服务配置管理</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">config:</span> </span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>区分开发环境,和application配置稍有区别</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># 连接配置中心的时候需要配置客户端提供的参数</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">luban-demo-cart</span></span><br><span class="line">  <span class="comment"># 微服务配置管理</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br><span class="line">  <span class="attr">config:</span></span><br><span class="line">    <span class="attr">activate:</span></span><br><span class="line">      <span class="attr">on-profile:</span> <span class="string">dev</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="comment"># 连接配置中心的时候需要配置客户端提供的参数</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">luban-demo-cart</span></span><br><span class="line">  <span class="comment"># 微服务配置管理</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="number">100.99</span><span class="number">.11</span><span class="number">.11</span><span class="string">:8848</span></span><br><span class="line">  <span class="attr">config:</span></span><br><span class="line">    <span class="attr">activate:</span></span><br><span class="line">      <span class="attr">on-profile:</span> <span class="string">prod</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="配置远程文件"><a href="#配置远程文件" class="headerlink" title="配置远程文件"></a>配置远程文件</h2><p>默认情况下,没有指定远程文件名称(dataId),当前nacosConfig客户端也会在启动后读取</p>
+<p><img src="D:\IDEA\IdeaProjects\jsd2304-notes\notes\DAY04\images\image-20230817144439161.png" alt="image-20230817144439161"></p>
+<ol>
+<li><p>{spring.application.name}</p>
+</li>
+<li><p>{spirng.application.name}.{file-extension}</p>
+</li>
+<li><p>{spring.application.name}-{spring.profiles.active}.{file-extension}</p>
+</li>
+</ol>
+<p>文件名称都是基于在bootstrap.yaml配置文件里指定属性值的</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.application.name</span>=<span class="string">luban-demo-cart</span></span><br><span class="line"><span class="attr">file-extension</span> <span class="string">没给默认值 properties</span></span><br><span class="line"><span class="attr">spring.profiles.active</span>=<span class="string">dev</span></span><br></pre></td></tr></table></figure>
+
+<p>在远程配置中心提供这个三个文件中的一个.</p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817145035544.png" alt="image-20230817145035544"></p>
+<p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817145214019.png" alt="image-20230817145214019"></p>
+<h2 id="本地配置远程化"><a href="#本地配置远程化" class="headerlink" title="本地配置远程化"></a>本地配置远程化</h2><p>保证能够读取到远程1个或者多个文件的前提下,可以将本地公用配置</p>
+<p>spring.datasource,从本地移除,放到远程文件.</p>
+<p>由于默认读取的文件,不一定满足文件后缀,格式的要求,而且,不能实现多个服务的共性化读取.所以我们需要指定让当前项目读取某一个,某几个文件.</p>
+<ul>
+<li>yaml属性 bootstrap.yaml</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">dev</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">luban-demo-cart</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">yaml</span></span><br><span class="line">        <span class="attr">shared-configs:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">data-id:</span> <span class="string">datasource.yaml</span></span><br><span class="line">            <span class="attr">refresh:</span> <span class="literal">true</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">data-id:</span> <span class="string">mybatis.yaml</span></span><br><span class="line">            <span class="attr">refresh:</span> <span class="literal">true</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">data-id:</span> <span class="string">nacos-registry.yaml</span></span><br><span class="line">            <span class="attr">refresh:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">config:</span></span><br><span class="line">    <span class="attr">activate:</span></span><br><span class="line">      <span class="attr">on-profile:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
+
+<p>bootstrap.yaml配置内容如上:</p>
+<ul>
+<li>帮助nacosconfig客户端提前连接nacosconfig服务端读取指定文件</li>
+<li>如果没指定文件 没有配置shared-configs,会根据spring.applicaiton.name 和spring.profiles.active,和spring.cloud.nacos.config.file-extensions属性值,读取默认的三个文件.</li>
+<li>通过shared-configs配置指定文件,可以实现公用文件的读取. 指定读取三个文件 datasource.yaml(spring.datasource.url) nacos-registry.yaml(spring.cloud.nacos.discovery.server-addr),mybatis.yaml(mybatis.configuration.**)</li>
+</ul>
+<h1 id="nacos阶段性总结"><a href="#nacos阶段性总结" class="headerlink" title="nacos阶段性总结"></a>nacos阶段性总结</h1><h2 id="阶段性架构"><a href="#阶段性架构" class="headerlink" title="阶段性架构"></a>阶段性架构</h2><p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230817163656293.png" alt="image-20230817163656293"></p>
+<h2 id="nacos核心内容"><a href="#nacos核心内容" class="headerlink" title="nacos核心内容"></a>nacos核心内容</h2><p>nacos能实现什么功能?</p>
+<ul>
+<li>注册中心</li>
+<li>配置中心</li>
+</ul>
+<p>nacos角色有哪些?</p>
+<ul>
+<li><p>注册中心</p>
+<ul>
+<li><strong>服务端</strong>: 提供进程,管理对外暴露的接口,等待客户端连接</li>
+<li>客户端: 访问服务端接口,进行注册和抓取(心跳)</li>
+</ul>
+</li>
+<li><p>配置中心</p>
+<ul>
+<li><strong>服务端</strong>(和注册中心服务端同一个进程):</li>
+<li>客户端: 访问服务端接口,进行获取配置文件的请求</li>
+</ul>
+</li>
+</ul>
+<p>nacos在哪用?怎么用</p>
+<ul>
+<li>面向服务编程的时候,每一个单独服务进程中使用(cart order stock 拆分的项目)</li>
+<li>服务端进程需要启动,需要访问.</li>
+<li>nacos客户端逻辑整合到web应用<ul>
+<li>依赖(spring-cloud-starter-alibaba-nacos-discovery)</li>
+<li>yaml配置(大量属性使用)</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/20/AOP/" rel="prev" title="AOP">
+                  <i class="fa fa-angle-left"></i> AOP
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/20/Dubbo/" rel="next" title="Dubbo">
+                  Dubbo <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sanpoi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:51</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

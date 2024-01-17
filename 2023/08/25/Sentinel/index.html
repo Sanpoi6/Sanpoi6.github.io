@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"sanpoi6.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="熔断限流是一种在分布式系统中用于保护服务稳定性的机制，而Sentinel是一个开源的高可用的流量控制组件，专注于流量控制、熔断和系统自适应保护。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sentinel">
+<meta property="og:url" content="https://sanpoi6.github.io/2023/08/25/Sentinel/index.html">
+<meta property="og:site_name" content="Sanpoi">
+<meta property="og:description" content="熔断限流是一种在分布式系统中用于保护服务稳定性的机制，而Sentinel是一个开源的高可用的流量控制组件，专注于流量控制、熔断和系统自适应保护。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-1.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823140641362.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823141350812.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-2.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823172618400.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824101644612.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824101834655.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824102025317.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-3.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824111933369.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-4.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824113824597.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-5.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824114308850.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-6.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824140353094.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-7.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824142736961.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824152826215.png">
+<meta property="og:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/sentinel%E7%86%94%E6%96%AD%E9%99%90%E6%B5%81.png">
+<meta property="article:published_time" content="2023-08-25T07:23:17.000Z">
+<meta property="article:modified_time" content="2023-08-25T07:42:15.155Z">
+<meta property="article:author" content="Sanpoi">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-1.png">
+
+
+<link rel="canonical" href="https://sanpoi6.github.io/2023/08/25/Sentinel/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://sanpoi6.github.io/2023/08/25/Sentinel/","path":"2023/08/25/Sentinel/","title":"Sentinel"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Sentinel | Sanpoi</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Sanpoi</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">东隅已逝，桑榆非晚</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Sentinel"><span class="nav-number">1.</span> <span class="nav-text">Sentinel</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nacos-dubbo-gateway"><span class="nav-number">1.1.</span> <span class="nav-text">nacos dubbo gateway</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%86%94%E6%96%AD"><span class="nav-number">1.2.</span> <span class="nav-text">熔断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%90%E6%B5%81"><span class="nav-number">1.3.</span> <span class="nav-text">限流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%8D%E7%BA%A7"><span class="nav-number">1.4.</span> <span class="nav-text">降级</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sentinel%E7%BB%84%E4%BB%B6%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">sentinel组件学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#sentinel%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.1.</span> <span class="nav-text">sentinel介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sentinel%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">2.2.</span> <span class="nav-text">sentinel核心概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E5%B7%A5%E7%A8%8B"><span class="nav-number">2.3.</span> <span class="nav-text">准备一个测试工程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89sentinel%E7%9A%84%E8%B5%84%E6%BA%90"><span class="nav-number">2.4.</span> <span class="nav-text">定义sentinel的资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%B8%8A%E8%BF%B0%E5%AE%9A%E4%B9%89%E7%9A%84%E8%B5%84%E6%BA%90%E5%87%86%E5%A4%87%E8%A7%84%E5%88%99"><span class="nav-number">2.5.</span> <span class="nav-text">为上述定义的资源准备规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sentinel%E8%B5%84%E6%BA%90%E9%99%90%E6%B5%81%E7%9A%84%E5%8E%9F%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-number">2.6.</span> <span class="nav-text">sentinel资源限流的原理流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SENTINEL%E7%86%94%E6%96%AD%E9%99%90%E6%B5%81"><span class="nav-number">3.</span> <span class="nav-text">SENTINEL熔断限流</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E5%88%99%E6%96%87%E4%BB%B6%E5%AE%9A%E4%B9%89"><span class="nav-number">3.1.</span> <span class="nav-text">规则文件定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E8%A7%84%E5%88%99%E6%A1%88%E4%BE%8B"><span class="nav-number">3.2.</span> <span class="nav-text">本地文件规则案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E4%B8%80%E4%B8%AA%E5%92%8C-sentinel01%E5%AE%8C%E5%85%A8%E4%B8%80%E6%A0%B7%E7%9A%84web%E5%BA%94%E7%94%A8"><span class="nav-number">3.2.1.</span> <span class="nav-text">准备一个和 sentinel01完全一样的web应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E6%9C%AC%E5%9C%B0%E8%A7%84%E5%88%99%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.2.</span> <span class="nav-text">编写一个本地规则文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%E7%9A%84Init%E7%B1%BB"><span class="nav-number">3.2.3.</span> <span class="nav-text">创建读取文件的Init类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AESPI%E8%AF%BB%E5%8F%96%E5%8A%A0%E8%BD%BD%E6%96%B9%E5%BC%8F"><span class="nav-number">3.2.4.</span> <span class="nav-text">配置SPI读取加载方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E5%88%B7%E6%96%B0"><span class="nav-number">3.2.5.</span> <span class="nav-text">验证刷新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8nacos%E5%AE%9E%E7%8E%B0%E8%A7%84%E5%88%99%E7%9A%84%E8%BF%9C%E7%A8%8B%E8%AF%BB%E5%8F%96"><span class="nav-number">3.3.</span> <span class="nav-text">利用nacos实现规则的远程读取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8nacos-%E5%87%86%E5%A4%87%E5%A5%BD%E4%BA%86%E8%BF%9C%E7%A8%8B%E8%A7%84%E5%88%99%E6%96%87%E4%BB%B6"><span class="nav-number">3.3.1.</span> <span class="nav-text">启动nacos 准备好了远程规则文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E4%B8%80%E4%B8%AA%E6%96%B0%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A1%88%E4%BE%8Bsentinel03"><span class="nav-number">3.3.2.</span> <span class="nav-text">准备一个新项目的案例sentinel03</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81sentine%E8%AF%BB%E5%8F%96nacos%E6%96%87%E4%BB%B6%E4%BE%9D%E8%B5%96"><span class="nav-number">3.3.3.</span> <span class="nav-text">添加一个支持sentine读取nacos文件依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yaml%E9%85%8D%E7%BD%AE"><span class="nav-number">3.3.4.</span> <span class="nav-text">yaml配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%B5%8B%E8%AF%95%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%99"><span class="nav-number">3.3.5.</span> <span class="nav-text">启动测试动态规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sentinel%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="nav-number">3.3.6.</span> <span class="nav-text">sentinel控制台</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E5%AE%9E%E7%8E%B0%E8%B5%84%E6%BA%90%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">3.4.</span> <span class="nav-text">注解实现资源的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90%E6%A1%88%E4%BE%8B"><span class="nav-number">3.4.1.</span> <span class="nav-text">注解定义资源案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8E%9F%E7%90%86"><span class="nav-number">3.4.2.</span> <span class="nav-text">注解的使用原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E8%A7%A3SentinelResource%E5%AE%9A%E4%B9%89controller%E6%96%B9%E6%B3%95%E4%B8%BA%E8%B5%84%E6%BA%90"><span class="nav-number">3.4.3.</span> <span class="nav-text">使用注解SentinelResource定义controller方法为资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SentinelResource%E6%B3%A8%E8%A7%A3%E7%9A%84%E5%85%B6%E5%AE%83%E5%B1%9E%E6%80%A7"><span class="nav-number">3.4.4.</span> <span class="nav-text">SentinelResource注解的其它属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%84%E5%88%99%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.5.</span> <span class="nav-text">规则详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%90%E6%B5%81%E8%A7%84%E5%88%99"><span class="nav-number">3.5.1.</span> <span class="nav-text">限流规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%86%94%E6%96%AD%E8%A7%84%E5%88%99"><span class="nav-number">3.5.2.</span> <span class="nav-text">熔断规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E7%86%94%E6%96%AD%E6%A1%88%E4%BE%8B"><span class="nav-number">3.5.3.</span> <span class="nav-text">做熔断案例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Sanpoi"
+      src="/images/header.jpg">
+  <p class="site-author-name" itemprop="name">Sanpoi</p>
+  <div class="site-description" itemprop="description">人无远虑，必有近忧</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://sanpoi6.github.io/2023/08/25/Sentinel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/header.jpg">
+      <meta itemprop="name" content="Sanpoi">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Sanpoi">
+      <meta itemprop="description" content="人无远虑，必有近忧">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Sentinel | Sanpoi">
+      <meta itemprop="description" content="熔断限流是一种在分布式系统中用于保护服务稳定性的机制，而Sentinel是一个开源的高可用的流量控制组件，专注于流量控制、熔断和系统自适应保护。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Sentinel
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-08-25 15:23:17 / 修改时间：15:42:15" itemprop="dateCreated datePublished" datetime="2023-08-25T15:23:17+08:00">2023-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3%E7%BB%84%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">微服务相关组件</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>12k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">熔断限流是一种在分布式系统中用于保护服务稳定性的机制，而Sentinel是一个开源的高可用的流量控制组件，专注于流量控制、熔断和系统自适应保护。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Sentinel"><a href="#Sentinel" class="headerlink" title="Sentinel"></a>Sentinel</h1><h2 id="nacos-dubbo-gateway"><a href="#nacos-dubbo-gateway" class="headerlink" title="nacos dubbo gateway"></a>nacos dubbo gateway</h2><p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-1.png"></p>
+<p>使用者3个组件搭建的微服务架构,加上springboot,能够完成大部分项目核心功能.</p>
+<p>需要引入更多的组件,完善架构.比如sentinel和rocketmq</p>
+<h2 id="熔断"><a href="#熔断" class="headerlink" title="熔断"></a>熔断</h2><p>微服务架构中,切分的服务越多,调用关系就越复杂.</p>
+<p>如果在多个服务调用过程中,由于某个服务的实例故障,导致调用失败,延迟,等待,重试.</p>
+<p><strong>需要不需要对这种调用失败的问题进行处理,如果不处理会不会有重大影响?</strong></p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823140641362.png" alt="image-20230823140641362" style="zoom:50%;" />
+
+<p>如果不及时解决这个问题,会导致A服务中所有服务实例,访问B服务这个宕机故障节点等待排队,压力向上传递了,积累到一定程度,A服务也会有不可访问的危险.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823141350812.png" alt="image-20230823141350812" style="zoom:50%;" />
+
+<p>最终A作为调用者,瘫痪,整个服务调用链路压力上传,全部瘫痪.</p>
+<p>引入熔断机制和支持熔断的技术组件—sentinel</p>
+<ul>
+<li>熔断</li>
+</ul>
+<p>牺牲局部保存全局的处理问题的思想(<strong>保险丝</strong>)</p>
+<p>在系统中定义远程调用,定义访问方法的资源(sentinel).</p>
+<p>提供一个<strong>断路器</strong>. 在调用这个资源的时候,插入一个断路器,利用规则限制,资源一旦发生问题(异常,超时条件),断路器就会开始工作.在三个状态之间进行切换.</p>
+<p>闭合,打开,半开</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-2.png" style="zoom:50%;" />
+
+<p>闭合: 正常调用资源的时候</p>
+<p>打开: 调用资源的时候微服务断路器判断规则</p>
+<p>半开: 打开一段时间之后,尝试半开,半开调用成功,切换回闭合,半开尝试不成功,切换回打开.</p>
+<h2 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h2><p>服务器运行,每个服务器无论硬件还是软件都是承受访问并发的上限.</p>
+<p>目的: 限流的目的,防止服务接收超过上限的<strong>请求</strong>,导致崩溃.</p>
+<p>考虑服务器性能,软件的性能(通用经验)</p>
+<p>例如: </p>
+<p>4C8G服务器运行一个tomcat的web应用,承受的并发100左右,占用的cpu线程数30-50之间. <strong>tomcat访问上限的.</strong></p>
+<p>流量计算的一些概念和公式;</p>
+<ul>
+<li>RT: reaction time 表示一次请求服务器处理时长<ul>
+<li>服务单独运行,做查询,而且从redis获取数据 响应RT不会太大 10ms以内</li>
+<li>连接了数据库mysql软件20ms以上(上限取决于mysql读写数据的速度,数据优化,一般而言 100ms)</li>
+<li>服务运行涉及到调用其他服务(单独计算)</li>
+</ul>
+</li>
+<li>QPS: queries per second 每秒请求次数<ul>
+<li>理论计算公式: 服务进程 <strong>QPS&#x3D;并发&#x2F;RT</strong></li>
+</ul>
+</li>
+<li>并发: 硬件服务器条件是基础,支持软件同时处理的请求数量 tomcat 一般100并发</li>
+<li>pv量: 一般关注的是日pv量 (page view) ,每次请求都是一次pv</li>
+</ul>
+<p>对于pv量概念,需要了解一个计算思路.</p>
+<p><strong>一个系统日pv量20亿. 请估算峰值QPS</strong></p>
+<p>满足pv 2&#x2F;8分布的情况.  20% 时间 集中了80%pv</p>
+<p>20亿*80%&#x3D;16亿</p>
+<p>24*20%&#x3D;4.8小时    17280秒</p>
+<p>峰值QPS 16亿&#x2F;17280S&#x3D; 9万&#x2F;S</p>
+<p>结论:</p>
+<p>掌握内容</p>
+<p>给你并发数 假设200 如果达到1000的qps rt是多少? 200ms.</p>
+<p>给你并发数 假设200 如果预估rt时间是100ms 每个tomcat qps <strong>2000&#x2F;S</strong></p>
+<p>系统日pv量是5亿   峰值qps 估算值<strong>2.25万&#x2F;S</strong>  需要13个tomcat </p>
+<p>4C8G 预留系统的占用内存1.5G 够了 20% 浮动 1.5G 其余的全部跑 256M tomcat</p>
+<p>2台跑 一台 10个</p>
+<h2 id="降级"><a href="#降级" class="headerlink" title="降级"></a>降级</h2><p>无论是熔断 还是限流 ,总会有一些请求是无法处理的.</p>
+<p>降级思路: 发生无法访问的情况,返回一个退而求其次的结果或者数据.</p>
+<p><strong>也是微服务分布式集群中 实现系统基本可用的最重要的思路之一</strong></p>
+<p>例子: </p>
+<p>抖音刷视频的时候,并发持续的高. 但是功能访问分为核心功能和辅助功能.</p>
+<p>一定要通过降级保证核心功能可用性.</p>
+<p>刷视频,经常看不到评论.</p>
+<h1 id="sentinel组件学习"><a href="#sentinel组件学习" class="headerlink" title="sentinel组件学习"></a>sentinel组件学习</h1><h2 id="sentinel介绍"><a href="#sentinel介绍" class="headerlink" title="sentinel介绍"></a>sentinel介绍</h2><p>官网: <a target="_blank" rel="noopener" href="http://sentinelguard.io/zh-cn/docs/introduction.html">http://sentinelguard.io/zh-cn/docs/introduction.html</a></p>
+<p><strong>注意</strong>: 和redis的sentinel 同名的,但是完全不相关技能技术组件.</p>
+<p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 是面向分布式、多语言异构化服务架构的<strong>流量治理组件</strong>，主要以流量为切入点，从流量路由、<strong>流量控制</strong>、流量整形、<strong>熔断降级</strong>、系统自适应过载保护、热点流量防护等多个维度来帮助开发者<strong>保障微服务的稳定性</strong>。</p>
+<h2 id="sentinel核心概念"><a href="#sentinel核心概念" class="headerlink" title="sentinel核心概念"></a>sentinel核心概念</h2><p><strong>资源</strong></p>
+<p>资源是 Sentinel 的关键概念。它可以是 Java 应用程序中的任何内容，例如，由应用程序提供的服务，或由应用程序调用的其它应用提供的服务，甚至可以是一段代码。在接下来的文档中，我们都会用资源来描述代码块。只要通过 Sentinel API 定义的代码，就是资源，能够被 Sentinel 保护起来。大部分情况下，可以使用方法签名，URL，甚至服务名称作为资源名来标示资源。</p>
+<p><strong>规则</strong></p>
+<p>围绕资源的实时状态设定的规则，可以包括<strong>流量控制规则</strong>、<strong>熔断降级规则</strong>以及系统保护规则。所有规则可以动态实时调整</p>
+<h2 id="准备一个测试工程"><a href="#准备一个测试工程" class="headerlink" title="准备一个测试工程"></a>准备一个测试工程</h2><ul>
+<li>创建工程</li>
+</ul>
+<p>后续还有迭代案例 sentinel02 sentinel03</p>
+<ul>
+<li>父工程添加依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--springboot web--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--sentinel--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在子工程编写测试基础代码</li>
+</ul>
+<p>HelloController-HelloService流程</p>
+<p>接口文件:</p>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>内容</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>请求地址</td>
+<td>&#x2F;hello</td>
+<td></td>
+</tr>
+<tr>
+<td>请求方式</td>
+<td>get</td>
+<td></td>
+</tr>
+<tr>
+<td>请求参数</td>
+<td>String name</td>
+<td>name&#x3D;wang</td>
+</tr>
+<tr>
+<td>返回数据</td>
+<td>String result</td>
+<td>hi wang</td>
+</tr>
+</tbody></table>
+<h2 id="定义sentinel的资源"><a href="#定义sentinel的资源" class="headerlink" title="定义sentinel的资源"></a>定义sentinel的资源</h2><p>在代码片段中可以引入sentinel 硬编码方式,定义自定义的资源.</p>
+<p>HelloController 定义资源</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tarena.luban.sentinel.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.Entry;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.SphU;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.slots.block.BlockException;</span><br><span class="line"><span class="keyword">import</span> com.tarena.luban.sentinel.service.HelloService;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> HelloService helloService;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sayHi</span><span class="params">(String name)</span>&#123;</span><br><span class="line">        <span class="comment">//准备一个资源的入口 Entry 资源用完了要释放</span></span><br><span class="line">        Entry entry=<span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//对于资源的调用取决于 entry赋值是否能通过规则的检测</span></span><br><span class="line">            <span class="comment">//如果SphU.entry方法检查 sayHi资源没有违反任何规则 如果违反了</span></span><br><span class="line">            <span class="comment">//就抛出异常,没有违反,就执行向后继续</span></span><br><span class="line">            entry= SphU.entry(<span class="string">&quot;sayHi&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> helloService.sayHi(name);</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (BlockException e) &#123;</span><br><span class="line">            <span class="comment">//打印个日志</span></span><br><span class="line">            log.info(<span class="string">&quot;当前资源sayHi收到了限制&quot;</span>,e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">//释放资源</span></span><br><span class="line">            <span class="keyword">if</span> (entry!=<span class="literal">null</span>) entry.exit();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="为上述定义的资源准备规则"><a href="#为上述定义的资源准备规则" class="headerlink" title="为上述定义的资源准备规则"></a>为上述定义的资源准备规则</h2><p>可以设置限流规则,可以设置熔断规则.</p>
+<p>入门规则: 限流规则</p>
+<p>只要现在的项目 启动加载的时候 有Fule的集合.就可以启动规则.</p>
+<p>启动类中,定义固定的规则.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tarena.luban.sentinel;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.slots.block.flow.FlowRule;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SentinelDemo01</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(SentinelDemo01.class,args);</span><br><span class="line">        <span class="comment">//定义一个限流规则.</span></span><br><span class="line">        List&lt;FlowRule&gt; flowRules=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        FlowRule flowRule=<span class="keyword">new</span> <span class="title class_">FlowRule</span>();</span><br><span class="line">        <span class="comment">//填写规则的具体属性</span></span><br><span class="line">        <span class="comment">//明确这个规则限制和检查的资源是谁</span></span><br><span class="line">        flowRule.setRefResource(<span class="string">&quot;sayHi&quot;</span>);</span><br><span class="line">        <span class="comment">//设置 流控方式 qps=1 并发=0</span></span><br><span class="line">        flowRule.setGrade(<span class="number">1</span>);</span><br><span class="line">        <span class="comment">//限流的阈值 count</span></span><br><span class="line">        flowRule.setCount(<span class="number">1</span>);</span><br><span class="line">        flowRules.add(flowRule);</span><br><span class="line">        <span class="comment">//sentinel组件 加载定义的规则</span></span><br><span class="line">        FlowRuleManager.loadRules(flowRules);</span><br><span class="line">        <span class="comment">//目前规则 定义的意思 : 访问sayHi qps超过阈值1 就会限制流量,不让访问</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="sentinel资源限流的原理流程"><a href="#sentinel资源限流的原理流程" class="headerlink" title="sentinel资源限流的原理流程"></a>sentinel资源限流的原理流程</h2><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230823172618400.png" alt="image-20230823172618400" style="zoom:50%;" />
+
+<p>定义的每一个entry 在调用过程中要经过一批Slot类计算</p>
+<p>其中必定经过 三个基础Slot Node Cluster Statistic 然后在经过的slot取决于我们定义的规则由多少种,每种规则由多少个.</p>
+<p>根据基本的Slot类计算的统计的结果,判断某个规则Slot是否触发了阈值.如果触发,就直接抛出异常,所有Slot都走完没有违反任何一个,正常调用目标方法或者代码.</p>
+<h1 id="SENTINEL熔断限流"><a href="#SENTINEL熔断限流" class="headerlink" title="SENTINEL熔断限流"></a>SENTINEL熔断限流</h1><h2 id="规则文件定义"><a href="#规则文件定义" class="headerlink" title="规则文件定义"></a>规则文件定义</h2><p>资源定义的很多,规则也很多.当前读取规则的方式,不灵活,不能动态读取.</p>
+<p>Sentinel提供了一种本地读取规则文件的加载方式.</p>
+<ul>
+<li>定义规则文件 放到当前项目 JSON格式</li>
+<li>项目中利用SPI的方式读取文件并且加载</li>
+<li>启动项目利用上述流程加载完整资源和<strong>规则</strong></li>
+</ul>
+<h2 id="本地文件规则案例"><a href="#本地文件规则案例" class="headerlink" title="本地文件规则案例"></a>本地文件规则案例</h2><h3 id="准备一个和-sentinel01完全一样的web应用"><a href="#准备一个和-sentinel01完全一样的web应用" class="headerlink" title="准备一个和 sentinel01完全一样的web应用"></a>准备一个和 sentinel01完全一样的web应用</h3><p>包含HelloController和HelloService所有功能</p>
+<ul>
+<li>创建module保证父子继承正确</li>
+<li>修改启动类SentinelDemo01–&gt;SentinelDemo02</li>
+<li>规则定义和加载的代码彻底删除(换一种加载规则的方式)</li>
+</ul>
+<h3 id="编写一个本地规则文件"><a href="#编写一个本地规则文件" class="headerlink" title="编写一个本地规则文件"></a>编写一个本地规则文件</h3><p>JSON格式的文本文件 flowRules.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sayHi&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p>文件放到当前项目resources文件夹.</p>
+<h3 id="创建读取文件的Init类"><a href="#创建读取文件的Init类" class="headerlink" title="创建读取文件的Init类"></a>创建读取文件的Init类</h3><p>对于Sentinel来讲,如果不是在硬编码中直接编辑List&lt;Rule&gt;规则数据.</p>
+<p>从任意其它位置读取文件,数据组织的规则对象,都叫做规则数据源DataSource.</p>
+<p>LocalDataSourceInit</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tarena.luban.sentinel.datasource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.datasource.Converter;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.datasource.FileRefreshableDataSource;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.datasource.ReadableDataSource;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.init.InitFunc;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.slots.block.flow.FlowRule;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * sentinel提供的接口</span></span><br><span class="line"><span class="comment"> * 实现并不是sentinel实现的(符合SPI思路)</span></span><br><span class="line"><span class="comment"> * 最终加载 告诉sentinel</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LocalDataSourceInit</span> <span class="keyword">implements</span> <span class="title class_">InitFunc</span> &#123;</span><br><span class="line">    <span class="comment">//初始化加载规则文件的</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">//1.读取文件,获取文件名称,类加载器的api</span></span><br><span class="line">        <span class="type">ClassLoader</span> <span class="variable">classLoader</span> <span class="operator">=</span> LocalDataSourceInit.class.getClassLoader();</span><br><span class="line">        <span class="type">URL</span> <span class="variable">resource</span> <span class="operator">=</span> classLoader.getResource(<span class="string">&quot;flowRules.json&quot;</span>);</span><br><span class="line">        String fileAllName=resource.getFile();</span><br><span class="line">        <span class="comment">//2.调用sentinel现成,将json格式数据文本转化为List&lt;FlowRule&gt;</span></span><br><span class="line">        ReadableDataSource&lt;String, List&lt;FlowRule&gt;&gt; datasource=</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">FileRefreshableDataSource</span>&lt;List&lt;FlowRule&gt;&gt;</span><br><span class="line">                    (fileAllName, <span class="keyword">new</span> <span class="title class_">Converter</span>&lt;String, List&lt;FlowRule&gt;&gt;() &#123;</span><br><span class="line">                        <span class="comment">/**</span></span><br><span class="line"><span class="comment">                         * <span class="doctag">@param</span> json 从文件中读到的文本</span></span><br><span class="line"><span class="comment">                         * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">                         */</span></span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="keyword">public</span> List&lt;FlowRule&gt; <span class="title function_">convert</span><span class="params">(String json)</span> &#123;</span><br><span class="line">                            <span class="comment">//调用JSON ali的json工具包</span></span><br><span class="line">                            <span class="comment">//将[] 格式json文本转化成list对象</span></span><br><span class="line">                            <span class="keyword">return</span> JSON.parseArray(json,FlowRule.class);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">        <span class="comment">//如果有第二个文件 读取文件全名称 新建第二个datasource</span></span><br><span class="line">        <span class="comment">//3.FlowRuleManager将数据源注册</span></span><br><span class="line">        FlowRuleManager.register2Property(datasource.getProperty());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置SPI读取加载方式"><a href="#配置SPI读取加载方式" class="headerlink" title="配置SPI读取加载方式"></a>配置SPI读取加载方式</h3><ul>
+<li>准备一个文件夹 resources&#x2F;<strong>META-INF&#x2F;services</strong></li>
+</ul>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824101644612.png" alt="image-20230824101644612" style="zoom:50%;" />
+
+<ul>
+<li>准备一个由固定名称文件,接口的全路径名称</li>
+</ul>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.csp.sentinel.init.InitFunc</span><br></pre></td></tr></table></figure>
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824101834655.png" alt="image-20230824101834655" style="zoom:50%;" />
+
+<ul>
+<li>填写内容,InitFunc本地实现类的全路径名称</li>
+</ul>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824102025317.png" alt="image-20230824102025317" style="zoom:50%;" />
+
+<ul>
+<li>日志打桩验证</li>
+</ul>
+<p>配置过程中,很多细节如果不正确,你自定义的datasource无效,可以通过日志判断是否加载</p>
+<h3 id="验证刷新"><a href="#验证刷新" class="headerlink" title="验证刷新"></a>验证刷新</h3><p>修改流控规则文件中的内容</p>
+<p>观察尝试,是否能够动态的调整规则.</p>
+<p>答案: 目前无法做到动态刷新规则</p>
+<h2 id="利用nacos实现规则的远程读取"><a href="#利用nacos实现规则的远程读取" class="headerlink" title="利用nacos实现规则的远程读取"></a>利用nacos实现规则的远程读取</h2><p>nacos作为配置中心,本来就可以远程管理大量的文本数据 格式包含json格式.</p>
+<p>sentinel支持一种数据源叫做NacosDatasource 从指定nacos配置中心读取远程配置文件. nacos可以在文件刷新,新发布之后,触发refresh ,将新数据推送给sentinel实现动态的规则调整.</p>
+<p>只有sentinel版本高于1.4才可以实现这个功能. 低于1.4无法读取nacos远程文件.</p>
+<h3 id="启动nacos-准备好了远程规则文件"><a href="#启动nacos-准备好了远程规则文件" class="headerlink" title="启动nacos 准备好了远程规则文件"></a>启动nacos 准备好了远程规则文件</h3><p>public命名空间 准备一个DEFAULT_GROUP分组的配置文件 flowRules.json</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-3.png" style="zoom:50%;" />
+
+<h3 id="准备一个新项目的案例sentinel03"><a href="#准备一个新项目的案例sentinel03" class="headerlink" title="准备一个新项目的案例sentinel03"></a>准备一个新项目的案例sentinel03</h3><ul>
+<li>保留HelloController HelloService</li>
+<li>不保留本地文件规则读取方式</li>
+</ul>
+<h3 id="添加一个支持sentine读取nacos文件依赖"><a href="#添加一个支持sentine读取nacos文件依赖" class="headerlink" title="添加一个支持sentine读取nacos文件依赖"></a>添加一个支持sentine读取nacos文件依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--支持sentinel读取nacos的文件依赖资源--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.csp<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sentinel-datasource-nacos<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="yaml配置"><a href="#yaml配置" class="headerlink" title="yaml配置"></a>yaml配置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">sentinel:</span></span><br><span class="line">      <span class="comment"># 一个文件 就是一个datasource</span></span><br><span class="line">      <span class="comment"># 一个文件内容中的规则必须是同一种</span></span><br><span class="line">      <span class="attr">datasource:</span></span><br><span class="line">        <span class="comment"># 每一个key值代表的都是一个数据源</span></span><br><span class="line">        <span class="attr">nacosFlowRule:</span></span><br><span class="line">          <span class="comment"># 数据源类型 file nacos db</span></span><br><span class="line">          <span class="attr">nacos:</span></span><br><span class="line">            <span class="comment"># 连接</span></span><br><span class="line">            <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br><span class="line">            <span class="comment"># public DEFALSE_GROUP group  namespace省略</span></span><br><span class="line">            <span class="comment"># data-type: 默认json</span></span><br><span class="line">            <span class="comment"># 读取远程文件名称</span></span><br><span class="line">            <span class="attr">data-id:</span> <span class="string">flowRules.json</span></span><br><span class="line">            <span class="comment"># 必须配置 指定的规则类型</span></span><br><span class="line">            <span class="attr">rule-type:</span> <span class="string">flow</span></span><br><span class="line">            <span class="comment"># sentinel 1.7以后 必须配置nacos授权用户名密码</span></span><br><span class="line">            <span class="attr">username:</span> <span class="string">nacos</span></span><br><span class="line">            <span class="attr">password:</span> <span class="string">nacos</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="启动测试动态规则"><a href="#启动测试动态规则" class="headerlink" title="启动测试动态规则"></a>启动测试动态规则</h3><p>初始化规则 qps&gt;1 限流</p>
+<p>修改规则 qps&gt;1000 限流</p>
+<h3 id="sentinel控制台"><a href="#sentinel控制台" class="headerlink" title="sentinel控制台"></a>sentinel控制台</h3><p>使用控制台好处是视图感受更强</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824111933369.png" alt="image-20230824111933369" style="zoom: 50%;" />
+
+<p>上述图标内容,配置的就是一个限流规则</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span><span class="string">&quot;someResource&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;limitApp&quot;</span><span class="punctuation">:</span><span class="string">&quot;default&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="number">12</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;strategy&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;controlBehavior&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="注解实现资源的定义"><a href="#注解实现资源的定义" class="headerlink" title="注解实现资源的定义"></a>注解实现资源的定义</h2><p>sentinel 通过硬编码 定义资源 侵入性比较强,代码内聚不高的特点.</p>
+<p>所以sentinel整合spring aop切面实现了注解的使用.</p>
+<h3 id="注解定义资源案例"><a href="#注解定义资源案例" class="headerlink" title="注解定义资源案例"></a>注解定义资源案例</h3><p>sentinel03基础之上,把硬编码的方式,改成注解的方式.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-4.png" style="zoom:50%;" />
+
+<h3 id="注解的使用原理"><a href="#注解的使用原理" class="headerlink" title="注解的使用原理"></a>注解的使用原理</h3><p>底层原理: AOP实现的资源定义</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824113824597.png" alt="image-20230824113824597" style="zoom:50%;" />
+
+<p>切面目前没有处理异常捕获逻辑的.所以一旦出现流控限制,抛异常</p>
+<p>需要在注解@SentinelResource中提供更多的属性.</p>
+<p>准备好和blockHandler名称相同的一个方法,参数和返回值和目标方法一致,<strong>同时</strong>,要接收一个BlockException类型异常对象.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-5.png" style="zoom:50%;" />
+
+<ul>
+<li>blockHandler属性: 值是一个字符串,表示的含义是当前目标类的一个方法名称.</li>
+</ul>
+<p>这个属性的定义会在切面中生成异常处理的逻辑.</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824114308850.png" alt="image-20230824114308850" style="zoom:50%;" />
+
+<h3 id="使用注解SentinelResource定义controller方法为资源"><a href="#使用注解SentinelResource定义controller方法为资源" class="headerlink" title="使用注解SentinelResource定义controller方法为资源"></a>使用注解SentinelResource定义controller方法为资源</h3><ul>
+<li>在Controller的方法sayHi 添加一个注解</li>
+</ul>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-6.png" style="zoom:50%;" />
+
+<ul>
+<li>给新的资源增加一个流控规则</li>
+</ul>
+<p>修改nacos中flowRules.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sayHi&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sayHello&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="number">1</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="SentinelResource注解的其它属性"><a href="#SentinelResource注解的其它属性" class="headerlink" title="SentinelResource注解的其它属性"></a>SentinelResource注解的其它属性</h3><ul>
+<li>value: 定义资源的名称 SphU.entry(“${value}”)</li>
+<li>blockHandler: 处理资源进入之后 违反规则抛出的BolckException异常使用的方法名字. 默认情况下需要在资源方法所在的类创建这个方法,但是也可以配合blockHandlerClass,定义一个<strong>静态</strong>方法调用. </li>
+<li>blockHandlerClass: 指定调用抛出BlockException异常的处理方法,方法必须静态.</li>
+</ul>
+<p>HelloBlockHandler.blockHandler().</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824140353094.png" alt="image-20230824140353094" style="zoom:50%;" />
+
+<ul>
+<li>fallback: 作用是定义处理Throwable异常的方法 和blockHandler唯一区别是对应异常类型Throwable.</li>
+<li>fallbackClass: 作用是定义调用fallback方法的类. 可以和blockHandlerClass同一个.</li>
+</ul>
+<p><strong>注意的点</strong>:</p>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/gateway-7.png" style="zoom:50%;" />
+
+
+
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824142736961.png" alt="image-20230824142736961" style="zoom:50%;" />
+
+<p>在controller中定义了一个方法作为资源管理</p>
+<p>并且在nacos配置了test资源的限流规则(一次都不让访问,访问一次就抛BlockException)</p>
+<p>访问接口: </p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8080/hello?name=%E7%8E%8B">http://localhost:8080/hello?name=王</a>  结果是什么</p>
+<ol>
+<li>进入sayHi资源的 Block降级</li>
+<li>进入sayHi资源的fallback降级</li>
+<li>进入test资源的fallback降级</li>
+<li><ul>
+<li><input checked="" disabled="" type="checkbox"> 正常调用</li>
+</ul>
+</li>
+</ol>
+<p><strong>结论不能使用this调用定义了资源的方法.</strong></p>
+<h2 id="规则详解"><a href="#规则详解" class="headerlink" title="规则详解"></a>规则详解</h2><p>sentinel提供了丰富的规则种类,详细介绍 使用json配置的规则由哪些属性.</p>
+<h3 id="限流规则"><a href="#限流规则" class="headerlink" title="限流规则"></a>限流规则</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span><span class="string">&quot;app&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;strategy&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;limitApp&quot;</span><span class="punctuation">:</span><span class="string">&quot;limitApp&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;controlBehavior&quot;</span><span class="punctuation">:</span><span class="number">0</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>resource: 绑定已经定义好的资源名称</p>
+</li>
+<li><p>count: 限流阈值,至于阈值表示的何种含义 取决于grade grade&#x3D;1 qps数量 grade&#x3D;0 并发数量(web应用并发表示同时存在请求个数)</p>
+</li>
+<li><p>grade: </p>
+<p>1 qps 流控类型</p>
+<p>0 并发 流控类型</p>
+</li>
+<li><p>strategry: 限流的模式</p>
+<p>0 直接限流: 针对resource的资源做限流</p>
+<p>1 关联限流, limitApp 属性值也表示一个资源,如果app的资源访问超过阈值了,限制limitApp.</p>
+<p>例如: 双11,所有资源都需要给下单让路.</p>
+<p>2 链路 limitApp 指定的资源,查看当前资源的链路是否是通过limitApp进入的,如果不是,不限制流量,如果是则限制流量.(限制的是来源)</p>
+</li>
+<li><p>limitApp: 当前资源关联的其它的某个资源,是否生效取决于strategy的值 1 2有用,而且作用不同.</p>
+</li>
+<li><p>controlBehavior:  限流效果,当访问已经违反了限流规则时,表现状态</p>
+</li>
+</ul>
+<p>​		0:  直接拒绝抛异常</p>
+<p>​		1: Warm up 慢慢的拒绝抛异常</p>
+<p>​		2: 排队 后续请求不拒绝 排队到一个queue队列(有上限)</p>
+<h3 id="熔断规则"><a href="#熔断规则" class="headerlink" title="熔断规则"></a>熔断规则</h3><p>示例</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sayHiService&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="number">100</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timeWindow&quot;</span><span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;minRequestAmount&quot;</span><span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;slowRatioThreshold&quot;</span><span class="punctuation">:</span> <span class="number">0.5</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;statIntervalMs&quot;</span><span class="punctuation">:</span> <span class="number">10000</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>resource: 绑定已经定义好的资源名称</p>
+</li>
+<li><p>count: 熔断触发的阈值(不再调用这个资源,而是访问降级策略),如果grade&#x3D;0 count表示慢调用临界RT(响应时间单位毫秒),超过这个数字,就记录一次慢调用.grade是1,count值应该是&gt;0小于1的小数,表示异常比例,grade&#x3D;2 count配置整数,表示异常出现的次数</p>
+</li>
+<li><p>grade: 熔断类型 0 默认值 慢调用比例 1 异常比例 2异常数</p>
+</li>
+<li><p>timeWindow: 如果触发熔断,持续时间,单位秒</p>
+</li>
+<li><p>minRequestAmount: 最少统计请求数量,如果没达到,即使超过count的阈值,也不熔断</p>
+</li>
+<li><p>slowRatioThreshold: 慢调用比例,只有在grade&#x3D;0的时候才有用.</p>
+</li>
+<li><p>statIntervalMs: 统计时长,计算判断熔断规则是否违反的逻辑中,有很多都需要统计时间段 单位是毫秒数.</p>
+</li>
+</ul>
+<h3 id="做熔断案例"><a href="#做熔断案例" class="headerlink" title="做熔断案例"></a>做熔断案例</h3><p>需求: 对sayHi资源做熔断案例的测试,使用慢调用比例的类型.</p>
+<ul>
+<li>准备和定义一个资源(已经有了)</li>
+<li>准备和定义一个规则文件</li>
+</ul>
+<img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/image-20230824152826215.png" alt="image-20230824152826215" style="zoom:50%;" />
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sayHi&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="number">100</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timeWindow&quot;</span><span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;minRequestAmount&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;slowRatioThreshold&quot;</span><span class="punctuation">:</span> <span class="number">0.5</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;statIntervalMs&quot;</span><span class="punctuation">:</span> <span class="number">10000</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p>上述规则定义加载之后,sentinel会统计针对sayHi资源是否达到熔断阈值要求,从而将sayHi屏蔽.屏蔽时长10秒钟(底层断路器Slot计算的打开 关闭 半开),10秒中之后尝试访问资源,如果再次出现慢调用,将会继续屏蔽.屏蔽的结果就是资源访问抛出DegradException.</p>
+<p>条件:</p>
+<ol>
+<li>10秒之内的统计数据</li>
+<li>最小请求数量达到1</li>
+<li>记录的慢调用次数&#x2F;总调用次数&gt;0.5</li>
+</ol>
+<ul>
+<li>配置sentinel的nacos数据源加载这个新文件</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">sentinel:</span></span><br><span class="line">      <span class="comment"># 一个文件 就是一个datasource</span></span><br><span class="line">      <span class="comment"># 一个文件内容中的规则必须是同一种</span></span><br><span class="line">      <span class="attr">datasource:</span></span><br><span class="line">        <span class="attr">nacosDegradeRule:</span></span><br><span class="line">          <span class="attr">nacos:</span></span><br><span class="line">            <span class="attr">server-addr:</span> <span class="string">localhost:8848</span></span><br><span class="line">            <span class="attr">data-id:</span> <span class="string">degradeRules.json</span></span><br><span class="line">            <span class="attr">rule-type:</span> <span class="string">degrade</span></span><br><span class="line">            <span class="attr">username:</span> <span class="string">nacos</span></span><br><span class="line">            <span class="attr">password:</span> <span class="string">nacos</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>尝试另一个熔断规则</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;resource&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sayHi&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;count&quot;</span><span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;grade&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timeWindow&quot;</span><span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;minRequestAmount&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;slowRatioThreshold&quot;</span><span class="punctuation">:</span> <span class="number">0.5</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;statIntervalMs&quot;</span><span class="punctuation">:</span> <span class="number">10000</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p>10秒钟之内,访问次数达到1,并且异常数达到5,就熔断抛异常,持续10秒钟</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><img src="https://cdn.staticaly.com/gh/sanpoi6/markdown_pic@main/2023/8/19/sentinel%E7%86%94%E6%96%AD%E9%99%90%E6%B5%81.png" alt="sentinel熔断限流"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/08/25/Spring-Cloud-Gateway/" rel="prev" title="Spring Cloud Gateway">
+                  <i class="fa fa-angle-left"></i> Spring Cloud Gateway
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/08/26/ThreadLocal/" rel="next" title="ThreadLocal">
+                  ThreadLocal <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Sanpoi</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:51</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
